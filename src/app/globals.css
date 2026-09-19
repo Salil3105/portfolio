@@ -221,6 +221,9 @@ p { margin: 0; }
 
 /* ---- PROJECTS ---- */
 .proj-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--s3); }
+/* two projects — centered 2-up */
+.proj-grid.two { grid-template-columns: repeat(2, minmax(0, 1fr)); max-width: 880px; margin-inline: auto; }
+@media (max-width: 720px) { .proj-grid.two { grid-template-columns: 1fr; max-width: 460px; } }
 /* single featured project — horizontal, centered */
 .proj-grid.single { grid-template-columns: minmax(0, 900px); justify-content: center; }
 .proj-grid.single .project { flex-direction: row; align-items: stretch; }

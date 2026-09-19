@@ -68,6 +68,14 @@ export const projects: Project[] = [
     demo: "https://rasapadmaclinic.onrender.com/",
     repo: "",
   },
+  {
+    name: "Kinetic Labs",
+    art: "art-finance",
+    desc: "The web platform for Kinetic Labs — a fast, responsive and cleanly designed site with smooth interactions, built and shipped end to end.",
+    tech: ["Next.js", "React", "Tailwind CSS"],
+    demo: "https://kineticlabs.in/",
+    repo: "",
+  },
 ];
 
 export type Experience = {
