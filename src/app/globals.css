@@ -128,6 +128,14 @@ p { margin: 0; }
   filter: drop-shadow(0 40px 80px rgba(0,0,0,.55)); }
 .avatar-illus { width: 100%; height: 100%; object-fit: cover; display: block; }
 
+/* ---- hand-crafted SVG workspace (default) ---- */
+.hero-art { width: 100%; max-width: 500px; height: auto; margin-inline: auto; display: block;
+  filter: drop-shadow(0 40px 70px rgba(0,0,0,.5)); animation: floaty 8s ease-in-out infinite; }
+.hero-chip { transform-box: fill-box; transform-origin: center; animation: floaty 6.5s ease-in-out infinite .4s; }
+@media (prefers-reduced-motion: reduce) { .hero-art, .hero-chip { animation: none !important; } }
+/* stylized avatar SVG */
+.avatar-art { width: 100%; height: 100%; display: block; }
+
 /* ---- 3D composition (CSS scene — fallback, contained, fast) ---- */
 .composition { position: relative; min-height: clamp(360px, 40vw, 480px); display: grid; place-items: center; padding: 24px; overflow: hidden; }
 .scene { position: relative; width: min(440px, 100%); }
