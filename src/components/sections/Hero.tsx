@@ -52,24 +52,28 @@ export default function Hero() {
           </motion.div>
         </motion.div>
 
-        {/* 3D composition */}
+        {/* 3D composition (CSS scene) */}
         <div className="composition" aria-hidden="true">
-          <div className="plinth" />
-          <div className="orb" />
-          <div className="cube" />
-          <div className="ring" />
-          <div className="code-window">
-            <div className="cw-bar">
-              <span className="dot" /><span className="dot" /><span className="dot" />
-              <span className="cw-title">inference_service.ts</span>
-            </div>
-            <div className="cw-body">
+          <div className="scene">
+            <div className="scene-glow" />
+            <div className="ring" />
+            <div className="orb" />
+            <div className="cube" />
+            <div className="mug"><span /><span /></div>
+            <div className="plinth" />
+            <div className="code-window">
+              <div className="cw-bar">
+                <span className="dot" /><span className="dot" /><span className="dot" />
+                <span className="cw-title">inference_service.ts</span>
+              </div>
+              <div className="cw-body">
               <div><span className="ln">1</span><span className="k">export async function</span> <span className="fn">rank</span><span className="pn">(</span><span className="pn">q</span><span className="pn">:</span> <span className="k">string</span><span className="pn">) {"{"}</span></div>
               <div><span className="ln">2</span>&nbsp;&nbsp;<span className="k">const</span> emb <span className="pn">=</span> <span className="k">await</span> <span className="fn">embed</span><span className="pn">(</span>q<span className="pn">);</span></div>
               <div><span className="ln">3</span>&nbsp;&nbsp;<span className="k">const</span> hits <span className="pn">=</span> <span className="k">await</span> vector<span className="pn">.</span><span className="fn">search</span><span className="pn">(</span>emb<span className="pn">,</span> <span className="nu">8</span><span className="pn">);</span></div>
               <div><span className="ln">4</span>&nbsp;&nbsp;<span className="c">{"// re-rank with the LLM judge"}</span></div>
               <div><span className="ln">5</span>&nbsp;&nbsp;<span className="k">return</span> <span className="fn">rerank</span><span className="pn">(</span>hits<span className="pn">).</span><span className="fn">then</span><span className="pn">(</span>toResults<span className="pn">)</span><span className="caret" /></div>
               <div><span className="ln">6</span><span className="pn">{"}"}</span></div>
+              </div>
             </div>
           </div>
         </div>
