@@ -63,26 +63,10 @@ export const projects: Project[] = [
   {
     name: "Rasapadma",
     art: "art-rasa",
-    desc: "A full-stack platform with a FastAPI backend and a React front end — structured content, search and a clean, responsive experience end to end.",
+    desc: "A production web platform for Rasapadma Clinic — a clean, responsive site with structured content and a smooth, booking-ready experience, built and deployed end to end.",
     tech: ["React", "FastAPI", "PostgreSQL"],
-    demo: "#",
-    repo: "https://github.com/",
-  },
-  {
-    name: "Resume Analyzer",
-    art: "art-resume",
-    desc: "AI-powered résumé analysis that extracts skills, scores fit against a role and returns actionable recommendations — powered by LLMs and a Python pipeline.",
-    tech: ["Python", "OpenAI", "Streamlit"],
-    demo: "#",
-    repo: "https://github.com/",
-  },
-  {
-    name: "AI Finance Tracker",
-    art: "art-finance",
-    desc: "Track spending with AI insights and smart budget recommendations — categorization, forecasts and gentle nudges, on a FastAPI & PostgreSQL backend.",
-    tech: ["FastAPI", "React", "PostgreSQL"],
-    demo: "#",
-    repo: "https://github.com/",
+    demo: "https://rasapadmaclinic.onrender.com/",
+    repo: "",
   },
 ];
 

@@ -14,7 +14,7 @@ export default function Projects({ heading = "Things I've built", band = false }
           <span className="link-more">Built with care →</span>
         </Reveal>
 
-        <div className="proj-grid">
+        <div className={`proj-grid${projects.length === 1 ? " single" : ""}`}>
           {projects.map((p, i) => (
             <Reveal as="article" className="card project" key={p.name} delay={i * 0.08}>
               <div className="thumb">
@@ -30,7 +30,9 @@ export default function Projects({ heading = "Things I've built", band = false }
                   <a href={p.demo} className="btn sm primary" target="_blank" rel="noopener noreferrer">
                     Live Demo <External />
                   </a>
-                  <a href={p.repo} className="btn sm ghost" target="_blank" rel="noopener noreferrer">GitHub</a>
+                  {p.repo ? (
+                    <a href={p.repo} className="btn sm ghost" target="_blank" rel="noopener noreferrer">GitHub</a>
+                  ) : null}
                 </div>
               </div>
             </Reveal>
