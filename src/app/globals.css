@@ -124,10 +124,9 @@ p { margin: 0; }
 .stat .l { font-family: var(--mono); font-size: 12px; letter-spacing: .06em; color: var(--muted-2); text-transform: uppercase; margin-top: 4px; }
 
 /* ---- 3D illustration (drop public/hero.png to use it) ---- */
-.hero-illus { width: 100%; max-width: 560px; height: auto; margin-inline: auto; display: block;
-  filter: drop-shadow(0 40px 80px rgba(0,0,0,.55));
-  -webkit-mask-image: radial-gradient(92% 92% at 50% 50%, #000 80%, transparent 100%);
-  mask-image: radial-gradient(92% 92% at 50% 50%, #000 80%, transparent 100%); }
+.hero-illus { width: 100%; max-width: 640px; height: auto; margin-inline: auto; display: block;
+  transform: scale(1.22); transform-origin: center;
+  mix-blend-mode: lighten; }
 /* natural, frameless photo (no window/card) */
 .avatar-photo { position: relative; display: grid; place-items: center; padding: 6px 0; }
 .avatar-photo::before {
@@ -152,7 +151,7 @@ p { margin: 0; }
 .avatar-art { width: 100%; height: 100%; display: block; }
 
 /* ---- 3D composition (CSS scene — fallback, contained, fast) ---- */
-.composition { position: relative; min-height: clamp(360px, 40vw, 480px); display: grid; place-items: center; padding: 24px; overflow: hidden; }
+.composition { position: relative; min-height: clamp(400px, 44vw, 540px); display: grid; place-items: center; padding: 24px; overflow: hidden; }
 .scene { position: relative; width: min(440px, 100%); }
 .scene-glow { position: absolute; inset: -50px; background: radial-gradient(58% 50% at 62% 42%, rgba(124,92,255,.20), transparent 70%); filter: blur(12px); z-index: 0; }
 .plinth { position: absolute; left: -24px; right: -24px; bottom: -46px; height: 44px; background: radial-gradient(60% 100% at 50% 0%, rgba(0,0,0,.55), transparent 70%); filter: blur(10px); z-index: 0; }
