@@ -11,12 +11,18 @@ export default function Avatar() {
     im.src = "/avatar.png";
   }, []);
 
+  // Real photo: show it naturally (no window/card frame), blending into the page.
+  if (img) {
+    return (
+      <div className="avatar-photo">
+        <img className="avatar-illus" src="/avatar.png" alt="Salil Chandwadkar" />
+      </div>
+    );
+  }
+
   return (
     <div className="avatar">
-      {img ? (
-        <img className="avatar-illus" src="/avatar.png" alt="3D avatar of Salil Chandwadkar" />
-      ) : (
-        <svg className="avatar-art" viewBox="0 0 300 255" preserveAspectRatio="xMidYMid slice" role="img" aria-label="Stylized avatar">
+      <svg className="avatar-art" viewBox="0 0 300 255" preserveAspectRatio="xMidYMid slice" role="img" aria-label="Stylized avatar">
           <defs>
             <radialGradient id="avbg" cx="50%" cy="34%" r="62%">
               <stop offset="0%" stopColor="#7c5cff" stopOpacity=".28" />
@@ -75,7 +81,6 @@ export default function Avatar() {
           {/* mouth */}
           <path d="M134 132 q16 11 32 0" fill="none" stroke="#141419" strokeWidth="3.5" strokeLinecap="round" />
         </svg>
-      )}
       <span className="tag">{"// building, learning, shipping"}</span>
     </div>
   );
