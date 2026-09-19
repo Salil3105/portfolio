@@ -1,0 +1,19 @@
+3D ILLUSTRATIONS — how to make them appear
+==========================================
+
+Drop two image files into THIS folder (public/) with these EXACT names:
+
+  1. hero.png     → the MacBook + coffee mug 3D render (hero, right side)
+  2. avatar.png   → the 3D person / avatar (About section)
+
+That's it. Refresh the page and they show automatically.
+
+- PNG (transparent background looks best) or JPG — if JPG, rename the
+  file to hero.png / avatar.png anyway, OR change the src in the code:
+    Hero:   src/components/sections/Hero.tsx   -> "/hero.png"
+    Avatar: src/components/Avatar.tsx          -> "/avatar.png"
+- If a file is missing, the site falls back to the built-in CSS scene /
+  "SC" orb — nothing breaks.
+
+Tip: you already have both images (the ones pasted in chat). Just save
+them here as hero.png and avatar.png.

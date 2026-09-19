@@ -1,5 +1,6 @@
 import Link from "next/link";
 import Reveal from "@/components/Reveal";
+import Avatar from "@/components/Avatar";
 import { features } from "@/lib/data";
 import { featureIcons, ArrowRight } from "@/lib/icons";
 
@@ -35,10 +36,7 @@ export default function About() {
           </Reveal>
 
           <Reveal className="avatar-wrap" delay={0.1}>
-            <div className="avatar">
-              <div className="mono-orb">SC</div>
-              <span className="tag">{"// building, learning, shipping"}</span>
-            </div>
+            <Avatar />
             <div className="feature-grid">
               {features.map((f) => (
                 <div className="feature" key={f.title}>

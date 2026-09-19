@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { useEffect, useState } from "react";
 import { motion, useReducedMotion } from "framer-motion";
 import { profile, stats } from "@/lib/data";
 import { ArrowRight, Download, GithubIcon, LinkedinIcon, TwitterIcon, MailIcon } from "@/lib/icons";
@@ -18,6 +19,13 @@ export default function Hero() {
   const reduce = useReducedMotion();
   const mv = reduce ? {} : { variants: container, initial: "hidden", animate: "show" };
   const iv = reduce ? {} : { variants: item };
+  // Default to the CSS scene; swap to /public/hero.png only once it loads.
+  const [heroImg, setHeroImg] = useState(false);
+  useEffect(() => {
+    const im = new window.Image();
+    im.onload = () => setHeroImg(true);
+    im.src = "/hero.png";
+  }, []);
 
   return (
     <section className="hero" id="top">
@@ -52,9 +60,12 @@ export default function Hero() {
           </motion.div>
         </motion.div>
 
-        {/* 3D composition (CSS scene) */}
+        {/* 3D illustration if provided (public/hero.png), else CSS scene */}
         <div className="composition" aria-hidden="true">
-          <div className="scene">
+          {heroImg && (
+            <img className="hero-illus" src="/hero.png" alt="3D workspace illustration" />
+          )}
+          <div className="scene" hidden={heroImg}>
             <div className="scene-glow" />
             <div className="ring" />
             <div className="orb" />
