@@ -125,7 +125,9 @@ p { margin: 0; }
 
 /* ---- 3D illustration (drop public/hero.png to use it) ---- */
 .hero-illus { width: 100%; max-width: 560px; height: auto; margin-inline: auto; display: block;
-  filter: drop-shadow(0 40px 80px rgba(0,0,0,.55)); }
+  filter: drop-shadow(0 40px 80px rgba(0,0,0,.55));
+  -webkit-mask-image: radial-gradient(92% 92% at 50% 50%, #000 80%, transparent 100%);
+  mask-image: radial-gradient(92% 92% at 50% 50%, #000 80%, transparent 100%); }
 /* natural, frameless photo (no window/card) */
 .avatar-photo { position: relative; display: grid; place-items: center; padding: 6px 0; }
 .avatar-photo::before {
