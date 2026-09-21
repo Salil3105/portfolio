@@ -3,9 +3,9 @@
 import { useState } from "react";
 import Reveal from "@/components/Reveal";
 import { profile } from "@/lib/data";
-import { MailIcon, LinkedinIcon, GithubIcon, Send } from "@/lib/icons";
+import { MailIcon, LinkedinIcon, GithubIcon, PinIcon, Send } from "@/lib/icons";
 
-export default function Contact({ band = true }: { band?: boolean }) {
+export default function Contact({ band = true, showHeading = true }: { band?: boolean; showHeading?: boolean }) {
   const [note, setNote] = useState("");
 
   function onSubmit(e: React.FormEvent<HTMLFormElement>) {
@@ -30,12 +30,16 @@ export default function Contact({ band = true }: { band?: boolean }) {
     <section className={`section${band ? " band" : ""}`} id="contact">
       <div className="wrap contact-grid">
         <Reveal className="contact-copy">
-          <span className="eyebrow">Get in touch</span>
-          <h2>Let&apos;s build something amazing.</h2>
-          <p className="lead">
-            I&apos;m always open to discussing new opportunities, interesting projects, or just
-            having a good conversation about backend systems and AI.
-          </p>
+          {showHeading && (
+            <>
+              <span className="eyebrow">Get in touch</span>
+              <h2>Let&apos;s build something amazing.</h2>
+              <p className="lead">
+                I&apos;m always open to discussing new opportunities, interesting projects, or just
+                having a good conversation about backend systems and distributed architecture.
+              </p>
+            </>
+          )}
           <div className="contact-methods">
             <a className="cmethod" href={`mailto:${profile.email}`}>
               <div className="ic"><MailIcon /></div>
@@ -43,12 +47,16 @@ export default function Contact({ band = true }: { band?: boolean }) {
             </a>
             <a className="cmethod" href={profile.linkedin} target="_blank" rel="noopener noreferrer">
               <div className="ic"><LinkedinIcon /></div>
-              <div><div className="m-l">LINKEDIN</div><div className="m-v">in/salil-chandwadkar</div></div>
+              <div><div className="m-l">LINKEDIN</div><div className="m-v">{profile.linkedinHandle}</div></div>
             </a>
             <a className="cmethod" href={profile.github} target="_blank" rel="noopener noreferrer">
               <div className="ic"><GithubIcon /></div>
-              <div><div className="m-l">GITHUB</div><div className="m-v">github.com/salil</div></div>
+              <div><div className="m-l">GITHUB</div><div className="m-v">{profile.githubHandle}</div></div>
             </a>
+            <div className="cmethod" style={{ cursor: "default" }}>
+              <div className="ic"><PinIcon /></div>
+              <div><div className="m-l">LOCATION</div><div className="m-v">{profile.location}</div></div>
+            </div>
           </div>
         </Reveal>
 

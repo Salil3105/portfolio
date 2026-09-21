@@ -1,17 +1,20 @@
 // ============================================================
 // Central content for the portfolio. Edit here to update the site.
+// Sourced from Salil Chandwadkar's résumé.
 // ============================================================
 
 export const profile = {
   name: "Salil Chandwadkar",
   initials: "SC",
-  role: "Software Engineer · Backend · AI · Full-Stack",
+  role: "Software Engineer · Java · Spring Boot · Kafka · AWS",
   email: "schandwadkar31@gmail.com",
-  // TODO: swap these placeholders for your real links + résumé URL
-  github: "https://github.com/",
-  linkedin: "https://linkedin.com/",
-  twitter: "https://twitter.com/",
-  resumeUrl: "#", // e.g. "/salil-resume.pdf"
+  phone: "+91 96237 43101",
+  location: "Pune, Maharashtra, India",
+  github: "https://github.com/Salil3105",
+  githubHandle: "github.com/Salil3105",
+  linkedin: "https://linkedin.com/in/salil-chandwadkar-2491031b0",
+  linkedinHandle: "in/salil-chandwadkar",
+  resumeUrl: "/salil-chandwadkar-resume.pdf",
 };
 
 export const navLinks = [
@@ -23,31 +26,31 @@ export const navLinks = [
 ] as const;
 
 export const stats = [
-  { n: "2", plus: "+", label: "Years Experience" },
-  { n: "20", plus: "+", label: "Projects Shipped" },
-  { n: "500", plus: "+", label: "GitHub Contributions" },
+  { n: "3", plus: "+", label: "Years Experience" },
+  { n: "20", plus: "+", label: "Technologies" },
+  { n: "2", plus: "", label: "Awards Won" },
 ];
 
 export const features = [
-  { icon: "engineer", title: "Engineer", desc: "Scalable backends & clean APIs." },
-  { icon: "learner", title: "Learner", desc: "Always exploring new tech." },
-  { icon: "builder", title: "Builder", desc: "Ideas turned into products." },
-  { icon: "solver", title: "Problem Solver", desc: "Focused on real impact." },
+  { icon: "engineer", title: "Engineer", desc: "Scalable microservices & REST APIs." },
+  { icon: "builder", title: "Architect", desc: "Event-driven, distributed systems." },
+  { icon: "cloud", title: "Cloud Native", desc: "AWS, Docker & Kubernetes." },
+  { icon: "solver", title: "Problem Solver", desc: "Clean, testable, maintainable code." },
 ];
 
 export const techStack = [
-  { key: "react", name: "React" },
-  { key: "fastapi", name: "FastAPI" },
-  { key: "python", name: "Python" },
-  { key: "java", name: "Java" },
+  { key: "java", name: "Java 17" },
   { key: "spring", name: "Spring Boot" },
+  { key: "kafka", name: "Kafka" },
+  { key: "node", name: "Node.js" },
+  { key: "react", name: "React" },
   { key: "postgres", name: "PostgreSQL" },
+  { key: "mongodb", name: "MongoDB" },
+  { key: "redis", name: "Redis" },
   { key: "docker", name: "Docker" },
   { key: "kubernetes", name: "Kubernetes" },
   { key: "aws", name: "AWS" },
-  { key: "redis", name: "Redis" },
   { key: "git", name: "Git" },
-  { key: "github", name: "GitHub" },
 ] as const;
 
 export type Project = {
@@ -64,7 +67,7 @@ export const projects: Project[] = [
     name: "Rasapadma",
     art: "art-rasa",
     desc: "A production web platform for Rasapadma Clinic — a clean, responsive site with structured content and a smooth, booking-ready experience, built and deployed end to end.",
-    tech: ["React", "FastAPI", "PostgreSQL"],
+    tech: ["React", "REST APIs", "PostgreSQL"],
     demo: "https://rasapadmaclinic.onrender.com/",
     repo: "",
   },
@@ -72,7 +75,7 @@ export const projects: Project[] = [
     name: "Kinetic Labs",
     art: "art-finance",
     desc: "The web platform for Kinetic Labs — a fast, responsive and cleanly designed site with smooth interactions, built and shipped end to end.",
-    tech: ["Next.js", "React", "Tailwind CSS"],
+    tech: ["React", "Node.js", "CI/CD"],
     demo: "https://kineticlabs.in/",
     repo: "",
   },
@@ -87,38 +90,60 @@ export type Experience = {
 
 export const experience: Experience[] = [
   {
-    role: "Software Engineer",
-    company: "ABC Tech Pvt. Ltd.",
-    duration: "2023 — Present",
+    role: "Software Engineer Specialist",
+    company: "Dassault Systèmes · Pune, India",
+    duration: "July 2023 — Present",
     points: [
-      "Design and ship scalable backend services with FastAPI and PostgreSQL.",
-      "Build AI-powered features — retrieval, ranking and LLM integrations.",
-      "Own React front ends and deployment on AWS with Docker.",
+      "Designed enterprise-scale microservices in Java 17 and Spring Boot for a large engineering platform, exposing secure REST APIs hardened with Spring Security, JWT and role-based access control.",
+      "Architected event-driven services with Apache Kafka in KRaft mode, enabling asynchronous, loosely coupled communication across product modules.",
+      "Built an event-streaming and notification platform with guaranteed ordering, event replay, retry policies, dead-letter queues and idempotent consumers for exactly-once processing.",
+      "Developed lightweight Kafka consumers in Node.js and Express so dashboards saw live product-lifecycle status without polling the core Java services.",
+      "Deployed cloud-native services on AWS (EC2, S3, RDS) with Docker and Kubernetes horizontal autoscaling, improving release reliability and consistency.",
+      "Modeled and tuned PostgreSQL and MySQL schemas on AWS RDS, and applied polyglot persistence with MongoDB and Redis for low-latency workloads.",
+      "Wrote JUnit and Mockito test suites and automated build, test and deploy workflows with GitHub Actions.",
+      "Led code reviews in an Agile team, enforcing SOLID principles, design patterns and clean-code standards.",
     ],
   },
+];
+
+export const education = {
+  degree: "B.Tech, Information Technology",
+  school: "MIT ADT University, Pune",
+  duration: "Graduated 2023",
+  detail: "CGPA 7.88 / 10",
+};
+
+export const achievements = [
   {
-    role: "Software Developer Intern",
-    company: "XYZ Solutions",
-    duration: "2022 — 2023",
-    points: [
-      "Built internal tools and automation scripts in Python.",
-      "Worked across PostgreSQL data models and REST APIs.",
-      "Collaborated in an Agile team shipping weekly.",
-    ],
+    title: "Best MIT Team Award — CodeBreak 3.0",
+    detail: "National-level hackathon, recognized for problem-solving and team collaboration.",
+  },
+  {
+    title: "2nd Prize — Ideathon",
+    detail: "University-level competition, for a creative and technically feasible product solution.",
   },
 ];
 
 export const skillGroups = [
   {
     title: "Backend",
-    skills: ["FastAPI", "Spring Boot", "Node.js", "REST APIs", "PostgreSQL", "Redis", "Microservices"],
+    skills: [
+      "Java 17", "Spring Boot", "Spring Security", "Spring Data JPA",
+      "Hibernate", "REST APIs", "Node.js", "Express.js", "JUnit", "Mockito",
+    ],
   },
   {
-    title: "AI Engineering",
-    skills: ["LLMs", "RAG", "Vector Search", "Prompt Design", "Embeddings", "PyTorch"],
+    title: "Architecture & Messaging",
+    skills: [
+      "Microservices", "Event-Driven", "Apache Kafka", "RabbitMQ",
+      "Distributed Systems", "Design Patterns", "SOLID",
+    ],
   },
   {
-    title: "Full-Stack & Cloud",
-    skills: ["React", "Next.js", "TypeScript", "Docker", "Kubernetes", "AWS", "CI/CD"],
+    title: "Data, Cloud & Frontend",
+    skills: [
+      "PostgreSQL", "MySQL", "MongoDB", "Redis", "AWS",
+      "Docker", "Kubernetes", "CI/CD", "React", "Redux",
+    ],
   },
 ];

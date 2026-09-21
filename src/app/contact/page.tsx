@@ -11,8 +11,9 @@ export default function ContactPage() {
         eyebrow="Get in touch"
         title="Let's talk."
         lead="Have a project in mind or just want to say hi? My inbox is always open."
+        art="contact"
       />
-      <Contact band={false} />
+      <Contact band={false} showHeading={false} />
     </>
   );
 }

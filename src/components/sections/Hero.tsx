@@ -4,7 +4,7 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 import { motion, useReducedMotion } from "framer-motion";
 import { profile, stats } from "@/lib/data";
-import { ArrowRight, Download, GithubIcon, LinkedinIcon, TwitterIcon, MailIcon } from "@/lib/icons";
+import { ArrowRight, Download, GithubIcon, LinkedinIcon, MailIcon } from "@/lib/icons";
 
 const container = {
   hidden: {},
@@ -34,8 +34,8 @@ export default function Hero() {
           <motion.span className="eyebrow" {...iv}>{profile.role}</motion.span>
           <motion.h1 {...iv}>Building <span className="grad">Intelligent Systems</span>.</motion.h1>
           <motion.p className="lead" {...iv}>
-            I design scalable backend systems, AI-powered applications and modern software products —
-            built for reliability, shipped with taste.
+            I design and ship production-grade backend systems — event-driven microservices in Java
+            and Spring Boot, streaming on Kafka, running cloud-native on AWS.
           </motion.p>
 
           <motion.div className="hero-cta" {...iv}>
@@ -46,7 +46,6 @@ export default function Hero() {
           <motion.div className="socials" {...iv}>
             <a href={profile.github} target="_blank" rel="noopener noreferrer" aria-label="GitHub"><GithubIcon /></a>
             <a href={profile.linkedin} target="_blank" rel="noopener noreferrer" aria-label="LinkedIn"><LinkedinIcon /></a>
-            <a href={profile.twitter} target="_blank" rel="noopener noreferrer" aria-label="Twitter"><TwitterIcon /></a>
             <a href={`mailto:${profile.email}`} aria-label="Email"><MailIcon /></a>
           </motion.div>
 

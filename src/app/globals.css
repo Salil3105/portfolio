@@ -285,6 +285,9 @@ p { margin: 0; }
 .tl-list { margin: var(--s2) 0 0; padding: 0; list-style: none; display: grid; gap: 8px; }
 .tl-list li { color: var(--muted); font-size: 15px; padding-left: 20px; position: relative; }
 .tl-list li::before { content:"—"; position: absolute; left: 0; color: var(--accent-2); }
+.edu-grid { display: grid; grid-template-columns: 1fr 1fr; gap: var(--s3); margin-top: var(--s6); }
+.edu-card { padding: var(--s4); }
+@media (max-width: 860px) { .edu-grid { grid-template-columns: 1fr; } }
 
 /* ---- SKILLS ---- */
 .skill-groups { display: grid; grid-template-columns: repeat(3,1fr); gap: var(--s4); }
@@ -316,6 +319,12 @@ p { margin: 0; }
 /* ---- page header (inner routes) ---- */
 .page-head { padding-top: clamp(40px, 6vw, 72px); padding-bottom: clamp(16px, 3vw, 28px); }
 .page-head h1 { font-size: clamp(38px, 6vw, 64px); line-height: 1; letter-spacing: -.03em; margin-top: var(--s3); }
+.page-head-grid { display: grid; grid-template-columns: 1.1fr .9fr; gap: clamp(24px, 4vw, 56px); align-items: center; }
+.page-art { position: relative; display: grid; place-items: center; }
+.art-svg { width: 100%; max-width: 420px; height: auto; display: block; margin-inline: auto;
+  animation: floaty 8s ease-in-out infinite; }
+@media (prefers-reduced-motion: reduce) { .art-svg { animation: none !important; } }
+@media (max-width: 860px) { .page-head-grid { grid-template-columns: 1fr; } .page-art { order: -1; } }
 
 /* ---- FOOTER ---- */
 .foot { border-top: 1px solid var(--line); padding-block: var(--s5); margin-top: var(--s6); }

@@ -13,8 +13,9 @@ export default function AboutPage() {
         eyebrow="About"
         title="A curious builder."
         lead="Engineer, learner, problem solver — here's the story behind the work."
+        art="about"
       />
-      <About />
+      <About showHeading={false} />
       <Skills band />
       <Contact />
     </>

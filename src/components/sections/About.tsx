@@ -4,31 +4,36 @@ import Avatar from "@/components/Avatar";
 import { features } from "@/lib/data";
 import { featureIcons, ArrowRight } from "@/lib/icons";
 
-export default function About() {
+export default function About({ showHeading = true }: { showHeading?: boolean }) {
   return (
     <section className="section" id="about">
       <div className="wrap">
-        <Reveal className="section-head">
-          <div>
-            <span className="eyebrow">About</span>
-            <h2 className="section-title">A curious builder who turns ideas into impact.</h2>
-          </div>
-        </Reveal>
+        {showHeading && (
+          <Reveal className="section-head">
+            <div>
+              <span className="eyebrow">About</span>
+              <h2 className="section-title">A curious builder who turns ideas into impact.</h2>
+            </div>
+          </Reveal>
+        )}
 
         <div className="about-grid">
           <Reveal className="about-copy">
             <p className="lead">
-              I&apos;m a software engineer who enjoys the whole arc of a product — from a resilient
-              backend and a clean data model to the AI layer that makes it feel intelligent.
+              I&apos;m a software engineer with 3+ years building production-grade enterprise
+              systems — the kind that have to stay up, stay fast, and stay maintainable.
             </p>
             <p>
-              My work sits where reliability meets research: designing APIs and services that hold up
-              under load, then layering in retrieval, ranking and language models that actually earn
-              their place. I care about latency budgets, readable code, and interfaces that feel calm to use.
+              At Dassault Systèmes I design microservices in Java 17 and Spring Boot for a large
+              engineering platform: secure REST APIs, event-driven communication over Apache Kafka,
+              and an event-streaming layer with guaranteed ordering, replay, dead-letter queues and
+              idempotent consumers. I care about latency budgets, clean data models, and code that
+              the next person can actually read.
             </p>
             <p>
-              Right now I&apos;m going deep on LLM systems, vector search and event-driven
-              architecture — and shipping side projects that let me learn in public.
+              I ship cloud-native on AWS with Docker and Kubernetes, model data across PostgreSQL,
+              MongoDB and Redis, and lead code reviews in an Agile team. Outside work you&apos;ll find
+              me writing technical posts, contributing to open source, and doing competitive coding.
             </p>
             <Link href="/contact" className="btn ghost" style={{ marginTop: "var(--s4)" }}>
               More about me <ArrowRight />

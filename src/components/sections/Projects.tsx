@@ -2,17 +2,19 @@ import Reveal from "@/components/Reveal";
 import { projects } from "@/lib/data";
 import { projectArt, External } from "@/lib/icons";
 
-export default function Projects({ heading = "Things I've built", band = false }: { heading?: string; band?: boolean }) {
+export default function Projects({ heading = "Things I've built", band = false, showHeading = true }: { heading?: string; band?: boolean; showHeading?: boolean }) {
   return (
     <section className={`section${band ? " band" : ""}`} id="projects">
       <div className="wrap">
-        <Reveal className="section-head">
-          <div>
-            <span className="eyebrow">Featured Work</span>
-            <h2 className="section-title">{heading}</h2>
-          </div>
-          <span className="link-more">Built with care →</span>
-        </Reveal>
+        {showHeading && (
+          <Reveal className="section-head">
+            <div>
+              <span className="eyebrow">Featured Work</span>
+              <h2 className="section-title">{heading}</h2>
+            </div>
+            <span className="link-more">Built with care →</span>
+          </Reveal>
+        )}
 
         <div className={`proj-grid${projects.length === 1 ? " single" : projects.length === 2 ? " two" : ""}`}>
           {projects.map((p, i) => (

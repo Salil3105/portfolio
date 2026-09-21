@@ -13,8 +13,9 @@ export default function ExperiencePage() {
         eyebrow="Experience"
         title="My journey."
         lead="Roles, teams and the things I've shipped along the way."
+        art="experience"
       />
-      <Experience band={false} />
+      <Experience band={false} showHeading={false} />
       <Skills band />
       <Contact />
     </>

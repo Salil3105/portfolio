@@ -13,8 +13,9 @@ export default function ProjectsPage() {
         eyebrow="Featured Work"
         title="Things I've built."
         lead="A selection of products spanning backend systems, AI and full-stack engineering."
+        art="projects"
       />
-      <Projects heading="Selected projects" />
+      <Projects showHeading={false} />
       <TechStack band />
       <Contact />
     </>
