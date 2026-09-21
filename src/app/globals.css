@@ -124,10 +124,10 @@ p { margin: 0; }
 .stat .l { font-family: var(--mono); font-size: 12px; letter-spacing: .06em; color: var(--muted-2); text-transform: uppercase; margin-top: 4px; }
 
 /* ---- 3D illustration (drop public/hero.png to use it) ---- */
+/* transparent-background render — no mask or blend needed */
 .hero-illus { position: relative; z-index: 1;
-  width: 100%; max-width: 660px; height: auto; margin-inline: auto; display: block;
-  -webkit-mask-image: radial-gradient(84% 88% at 50% 48%, #000 68%, transparent 100%);
-  mask-image: radial-gradient(84% 88% at 50% 48%, #000 68%, transparent 100%); }
+  width: 100%; max-width: 620px; height: auto; margin-inline: auto; display: block; }
+@media (min-width: 961px) { .hero-illus { width: 118%; max-width: none; } }
 /* natural, frameless photo (no window/card) */
 .avatar-photo { position: relative; display: grid; place-items: center; padding: 6px 0; }
 .avatar-photo::before {
@@ -153,13 +153,11 @@ p { margin: 0; }
 
 /* ---- 3D composition (CSS scene — fallback, contained, fast) ---- */
 .composition { position: relative; min-height: clamp(400px, 44vw, 540px); display: grid; place-items: center; padding: 24px; overflow: visible; }
-/* matching backdrop + glow so the hero image edge has no seam */
+/* soft ambient light behind the hero subject */
 .composition::before {
-  content: ""; position: absolute; inset: 4% 2% 6%; z-index: 0;
-  background:
-    radial-gradient(58% 52% at 52% 44%, rgba(124,92,255,.26), transparent 72%),
-    radial-gradient(72% 80% at 50% 50%, #0d0f16 0%, #0b0c12 46%, transparent 82%);
-  filter: blur(20px);
+  content: ""; position: absolute; inset: 16% 14% 20%; z-index: 0; border-radius: 50%;
+  background: radial-gradient(closest-side, rgba(124,92,255,.22), transparent 76%);
+  filter: blur(40px);
 }
 .scene { position: relative; width: min(440px, 100%); }
 .scene-glow { position: absolute; inset: -50px; background: radial-gradient(58% 50% at 62% 42%, rgba(124,92,255,.20), transparent 70%); filter: blur(12px); z-index: 0; }
