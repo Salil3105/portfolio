@@ -18,8 +18,6 @@ export default function Navbar() {
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
-  // close mobile menu on route change
-  useEffect(() => setOpen(false), [pathname]);
 
   return (
     <header className={`nav${scrolled ? " scrolled" : ""}`}>
@@ -60,6 +58,7 @@ export default function Navbar() {
               href={l.href}
               className={`btn ghost${pathname === l.href ? " primary" : ""}`}
               style={{ justifyContent: "flex-start" }}
+              onClick={() => setOpen(false)}
             >
               {l.label}
             </Link>
