@@ -62,7 +62,14 @@ export default function Hero() {
         {/* 3D illustration if provided (public/hero.png), else CSS scene */}
         <div className="composition" aria-hidden="true">
           {heroImg && (
-            <img className="hero-illus" src="/hero.png" alt="3D workspace illustration" />
+            <img
+              className="hero-illus"
+              src="/hero.png"
+              alt="3D workspace illustration"
+              width={1400}
+              height={933}
+              fetchPriority="high"
+            />
           )}
           <div className="scene" hidden={heroImg}>
             <svg className="hero-art" viewBox="0 0 480 400" role="img" aria-label="Laptop, coffee and floating code illustration">

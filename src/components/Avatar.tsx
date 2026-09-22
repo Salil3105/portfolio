@@ -15,7 +15,7 @@ export default function Avatar() {
   if (img) {
     return (
       <div className="avatar-photo">
-        <img className="avatar-illus" src="/avatar.png" alt="Salil Chandwadkar" />
+        <img className="avatar-illus" src="/avatar.png" alt="Salil Chandwadkar" width={1100} height={1100} />
       </div>
     );
   }
