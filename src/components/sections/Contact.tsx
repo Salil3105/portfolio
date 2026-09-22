@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useReducedMotion } from "framer-motion";
 import Reveal from "@/components/Reveal";
 import { profile } from "@/lib/data";
 import { MailIcon, LinkedinIcon, GithubIcon, PinIcon, Send } from "@/lib/icons";
@@ -10,6 +11,8 @@ type Status = "idle" | "sending" | "sent" | "error";
 export default function Contact({ band = true, showHeading = true }: { band?: boolean; showHeading?: boolean }) {
   const [status, setStatus] = useState<Status>("idle");
   const [note, setNote] = useState("");
+  const [flying, setFlying] = useState(false);
+  const reduce = useReducedMotion();
 
   async function onSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -47,6 +50,10 @@ export default function Contact({ band = true, showHeading = true }: { band?: bo
       setStatus("sent");
       setNote("Thanks — your message is on its way. I'll get back to you soon.");
       form.reset();
+      if (!reduce) {
+        setFlying(true);
+        window.setTimeout(() => setFlying(false), 1500);
+      }
     } catch {
       setStatus("error");
       setNote(`Network error. You can email me directly at ${profile.email}.`);
@@ -101,9 +108,18 @@ export default function Contact({ band = true, showHeading = true }: { band?: bo
               <label htmlFor="cf-msg">Message</label>
               <textarea id="cf-msg" name="message" placeholder="Tell me a little about what you're building…" required />
             </div>
-            <button type="submit" className="btn primary" disabled={status === "sending"}>
-              {status === "sending" ? "Sending…" : "Send Message"} <Send />
-            </button>
+            <div className="send-wrap">
+              <button type="submit" className="btn primary" disabled={status === "sending"}>
+                {status === "sending" ? "Sending…" : "Send Message"} <Send />
+              </button>
+
+              {/* the message literally takes off */}
+              {flying && (
+                <span className="plane" aria-hidden="true">
+                  <Send />
+                </span>
+              )}
+            </div>
             <div className={`form-note${status === "error" ? " err" : ""}${status === "sent" ? " ok" : ""}`} role="status" aria-live="polite">
               {note}
             </div>

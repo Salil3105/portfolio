@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { navLinks, profile } from "@/lib/data";
 import { GithubIcon, LinkedinIcon, MailIcon, ArrowRight } from "@/lib/icons";
+import Logo from "@/components/Logo";
 
 export default function Footer() {
   return (
@@ -19,7 +20,7 @@ export default function Footer() {
 
         <div className="foot-cols">
           <div className="foot-brand">
-            <Link href="/" className="logo"><b>SC</b><i>.</i></Link>
+            <Link href="/" aria-label="Home"><Logo /></Link>
             <p>
               Software engineer building event-driven microservices in Java and Spring Boot —
               currently at Dassault Systèmes, Pune.
@@ -55,8 +56,7 @@ export default function Footer() {
         </div>
 
         <div className="foot-bottom">
-          <span className="copy">© {new Date().getFullYear()} {profile.name}. All rights reserved.</span>
-          <span className="copy">Built with Next.js &amp; deployed on Vercel.</span>
+          <span className="copy">© {new Date().getFullYear()} {profile.name}. All rights reserved.</span>          
         </div>
       </div>
     </footer>
