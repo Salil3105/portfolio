@@ -5,25 +5,52 @@ import Reveal from "@/components/Reveal";
 import { profile } from "@/lib/data";
 import { MailIcon, LinkedinIcon, GithubIcon, PinIcon, Send } from "@/lib/icons";
 
+type Status = "idle" | "sending" | "sent" | "error";
+
 export default function Contact({ band = true, showHeading = true }: { band?: boolean; showHeading?: boolean }) {
+  const [status, setStatus] = useState<Status>("idle");
   const [note, setNote] = useState("");
 
-  function onSubmit(e: React.FormEvent<HTMLFormElement>) {
+  async function onSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
     const form = e.currentTarget;
     const data = new FormData(form);
-    const name = String(data.get("name") || "").trim();
-    const email = String(data.get("email") || "").trim();
-    const message = String(data.get("message") || "").trim();
-    if (!name || !email || !message) {
+    const payload = {
+      name: String(data.get("name") || "").trim(),
+      email: String(data.get("email") || "").trim(),
+      message: String(data.get("message") || "").trim(),
+    };
+
+    if (!payload.name || !payload.email || !payload.message) {
+      setStatus("error");
       setNote("Please fill in every field first.");
       return;
     }
-    const subject = encodeURIComponent(`Portfolio enquiry from ${name}`);
-    const body = encodeURIComponent(`${message}\n\n— ${name} (${email})`);
-    window.location.href = `mailto:${profile.email}?subject=${subject}&body=${body}`;
-    setNote("Opening your email app…");
-    form.reset();
+
+    setStatus("sending");
+    setNote("Sending…");
+
+    try {
+      const res = await fetch("/api/contact", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
+      });
+      const result = await res.json().catch(() => ({}));
+
+      if (!res.ok) {
+        setStatus("error");
+        setNote(result.error ?? "Couldn't send that. Please try again.");
+        return;
+      }
+
+      setStatus("sent");
+      setNote("Thanks — your message is on its way. I'll get back to you soon.");
+      form.reset();
+    } catch {
+      setStatus("error");
+      setNote(`Network error. You can email me directly at ${profile.email}.`);
+    }
   }
 
   return (
@@ -74,8 +101,12 @@ export default function Contact({ band = true, showHeading = true }: { band?: bo
               <label htmlFor="cf-msg">Message</label>
               <textarea id="cf-msg" name="message" placeholder="Tell me a little about what you're building…" required />
             </div>
-            <button type="submit" className="btn primary">Send Message <Send /></button>
-            <div className="form-note" role="status" aria-live="polite">{note}</div>
+            <button type="submit" className="btn primary" disabled={status === "sending"}>
+              {status === "sending" ? "Sending…" : "Send Message"} <Send />
+            </button>
+            <div className={`form-note${status === "error" ? " err" : ""}${status === "sent" ? " ok" : ""}`} role="status" aria-live="polite">
+              {note}
+            </div>
           </form>
         </Reveal>
       </div>

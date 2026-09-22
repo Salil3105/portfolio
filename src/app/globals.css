@@ -400,6 +400,9 @@ p { margin: 0; }
 .field textarea { min-height: 120px; }
 .contact-form .btn.primary { margin-top: 6px; }
 .form-note { font-size: 13px; color: var(--muted-2); text-align: center; min-height: 18px; }
+.form-note.ok { color: #6ee7a8; }
+.form-note.err { color: #ff8b8b; }
+.btn:disabled { opacity: .6; cursor: not-allowed; transform: none; }
 
 /* ---- page header (inner routes) ---- */
 .page-head { padding-top: clamp(40px, 6vw, 72px); padding-bottom: clamp(16px, 3vw, 28px); }
