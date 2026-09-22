@@ -12,7 +12,7 @@ export default function ProjectsPage() {
       <PageHeader
         eyebrow="Featured Work"
         title="Things I've built."
-        lead="A selection of products spanning backend systems, AI and full-stack engineering."
+        lead="Production platforms I've designed, built and shipped end to end."
         art="projects"
       />
       <Projects showHeading={false} />
