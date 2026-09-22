@@ -1,54 +1,67 @@
-"""Knock the dark background out of a product render.
+"""Knock the dark backdrop out of a studio product render.
 
-The render was lit on a near-black backdrop, so luminance is a good alpha
-channel: background -> transparent, subject/glow -> opaque. RGB is
-un-premultiplied so compositing over black reproduces the original exactly.
+Two steps, and the order matters:
+
+1. Subtract the backdrop's pedestal so the surrounding frame is pure black.
+2. Derive alpha from the remaining luminance and un-premultiply the colour.
+
+Doing (2) without (1) is what produces grey halos around the subject: the
+backdrop's own colour (say 22,25,36) divided by a small alpha explodes into a
+bright fringe. Once the backdrop is 0, those pixels stay 0 and disappear
+cleanly.
+
+Usage:
+    python3 scripts/cutout.py <render.png> <out.png> [pct] [thresh] [gain]
+
+    pct     percentile of the border taken as the backdrop level (default 94).
+            Raise if a faint rectangle survives.
+    thresh  luminance that becomes fully opaque (default 34). Lower keeps more
+            of the subject's dark areas solid.
+    gain    brightness restored after subtraction (default 1.08).
 """
 import sys
+
 import numpy as np
 from PIL import Image
 
 src_path, out_path = sys.argv[1], sys.argv[2]
-lo = float(sys.argv[3]) if len(sys.argv) > 3 else None
-hi = float(sys.argv[4]) if len(sys.argv) > 4 else None
+pct = float(sys.argv[3]) if len(sys.argv) > 3 else 94.0
+thresh = float(sys.argv[4]) if len(sys.argv) > 4 else 34.0
+gain = float(sys.argv[5]) if len(sys.argv) > 5 else 1.08
 
 img = Image.open(src_path).convert("RGB")
-rgb = np.asarray(img).astype(np.float32)
-lum = 0.2126 * rgb[..., 0] + 0.7152 * rgb[..., 1] + 0.0722 * rgb[..., 2]
+a = np.asarray(img).astype(np.float32)
+h, w, _ = a.shape
 
-h, w = lum.shape
-corner = np.concatenate([
-    lum[:h // 12, :w // 12].ravel(), lum[:h // 12, -w // 12:].ravel(),
-    lum[-h // 12:, :w // 12].ravel(), lum[-h // 12:, -w // 12:].ravel(),
+# --- 1. flatten the backdrop to black -------------------------------------
+bh, bw = max(4, h // 18), max(4, w // 18)
+border = np.concatenate([
+    a[:bh].reshape(-1, 3), a[-bh:].reshape(-1, 3),
+    a[:, :bw].reshape(-1, 3), a[:, -bw:].reshape(-1, 3),
 ])
-pcts = np.percentile(lum, [1, 10, 25, 50, 75, 90, 99])
-print(f"size={w}x{h}")
-print("lum percentiles [1,10,25,50,75,90,99] =", np.round(pcts, 1).tolist())
-print(f"corner bg: mean={corner.mean():.1f} p95={np.percentile(corner,95):.1f} max={corner.max():.1f}")
+pedestal = np.percentile(border, pct, axis=0)
+sub = np.clip((a - pedestal) * gain, 0, 255)
+print("backdrop pedestal (r,g,b) =", np.round(pedestal, 1).tolist())
 
-if lo is None:
-    lo = float(np.percentile(corner, 97))          # everything at backdrop level -> gone
-if hi is None:
-    hi = lo + 26.0                                  # short ramp keeps the glow soft
-print(f"using lo={lo:.1f} hi={hi:.1f}")
+# --- 2. alpha from what's left --------------------------------------------
+lum = 0.2126 * sub[..., 0] + 0.7152 * sub[..., 1] + 0.0722 * sub[..., 2]
+t = np.clip(lum / thresh, 0.0, 1.0)
+alpha = t * t * (3.0 - 2.0 * t)          # smoothstep
 
-t = np.clip((lum - lo) / max(hi - lo, 1e-6), 0.0, 1.0)
-alpha = t * t * (3.0 - 2.0 * t)                     # smoothstep
+safe = np.maximum(alpha, 1e-2)[..., None]
+rgb = np.clip(sub / safe, 0, 255)
+rgb = np.where(alpha[..., None] > 0, rgb, 0)
 
-# Un-premultiply so `rgb * alpha` over black == original pixel.
-safe = np.maximum(alpha, 1e-3)[..., None]
-out_rgb = np.clip(rgb / safe, 0, 255)
-out_rgb = np.where(alpha[..., None] > 0, out_rgb, 0)
+# Feather the outermost pixels so the frame edge can never show.
+fy, fx = np.ones(h, np.float32), np.ones(w, np.float32)
+ry, rx = max(2, h // 60), max(2, w // 60)
+fy[:ry], fy[-ry:] = np.linspace(0, 1, ry), np.linspace(1, 0, ry)
+fx[:rx], fx[-rx:] = np.linspace(0, 1, rx), np.linspace(1, 0, rx)
+alpha *= fy[:, None] * fx[None, :]
 
-out = np.dstack([out_rgb, alpha * 255.0]).astype(np.uint8)
-Image.fromarray(out, "RGBA").save(out_path)
+out = np.dstack([rgb, alpha * 255.0]).astype(np.uint8)
+Image.fromarray(out).save(out_path)
 
-op = (alpha > 0.98).mean() * 100
-tr = (alpha < 0.02).mean() * 100
-print(f"wrote {out_path}: {tr:.1f}% transparent, {op:.1f}% opaque")
-
-# Usage:
-#   python3 scripts/cutout.py <render.png> <public/art-projects.png> [lo] [hi]
-# `lo`/`hi` are luminance thresholds (defaults are derived from the corners).
-# Raise `lo` if a faint haze remains around the subject; lower it if the
-# subject's dark areas start disappearing.
+print(f"wrote {out_path}: "
+      f"{(alpha < 0.02).mean() * 100:.1f}% transparent, "
+      f"{(alpha > 0.98).mean() * 100:.1f}% opaque")
