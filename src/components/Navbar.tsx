@@ -24,7 +24,7 @@ export default function Navbar() {
   return (
     <header className={`nav${scrolled ? " scrolled" : ""}`}>
       <div className="wrap nav-inner">
-        <Link href="/" aria-label="Home"><Logo /></Link>
+        <Link href="/" aria-label="Home" className="logo-link"><Logo /></Link>
 
         <nav className="nav-links" aria-label="Primary">
           {navLinks.map((l) => {

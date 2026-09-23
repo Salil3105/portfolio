@@ -20,7 +20,7 @@ export default function Footer() {
 
         <div className="foot-cols">
           <div className="foot-brand">
-            <Link href="/" aria-label="Home"><Logo /></Link>
+            <Link href="/" aria-label="Home" className="logo-link"><Logo /></Link>
             <p>
               Software engineer building event-driven microservices in Java and Spring Boot —
               currently at Dassault Systèmes, Pune.
