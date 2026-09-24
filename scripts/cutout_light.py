@@ -47,6 +47,28 @@ markers[frame] = 1
 
 lab = ndi.watershed_ift(cost, markers)
 bg = lab == 1
+# Watershed leaves bits of the white desk (along the laptop's front edge,
+# beside the notebook) stranded on the subject side. Invisible on the light
+# page, bright chips on the dark one. Any pale (not clearly solid)
+# patch that isn't a seeded white object and touches the backdrop is desk:
+# hand it back. Enclosed highlights (teeth, eye whites, mug text) don't
+# touch the backdrop, so they stay.
+pale = ~bg & ~solid & ~ndi.binary_dilation(white_fg, iterations=15)
+comp, n = ndi.label(pale)
+touching = np.unique(comp[ndi.binary_dilation(bg) & pale])
+bg |= np.isin(comp, touching[touching > 0])
+# The desk is glossy: under the laptop, notebook, mug and phone there's a
+# grey reflection that's dark enough to pass as "solid", and it came out as
+# a dashed grey ledge on the dark page. Everything below each object's
+# dark bottom edge is desk, so in each column (left of the plant pot) the
+# lowest dark pixel on the desk marks where the subject ends.
+DESK_Y, POT_X = 1100, 1170
+dark = lum[DESK_Y:, :POT_X] < 80
+rows = np.arange(H - DESK_Y)[:, None]
+last = np.where(dark, rows, -1).max(0)
+desk = np.zeros((H, W), bool)
+desk[DESK_Y:, :POT_X] = (rows > last[None, :]) & (last[None, :] >= 0)
+bg |= desk
 
 # soft shade for the backdrop region: darker-than-white pixels there are
 # shadows, re-expressed as a translucent dark tone
@@ -85,7 +107,7 @@ core = ndi.binary_erosion(solid, iterations=3)
 _, (iy, ix) = ndi.distance_transform_edt(~core, return_indices=True)
 Fin = C[iy, ix]
 near_white = ndi.binary_dilation(white_fg & fg, iterations=40)
-band &= ~near_white
+band &= ~near_white & ~desk   # desk is shade, not a blend with white
 # alpha by projecting (white - pixel) onto (white - core colour) across all
 # three channels, so a yellow rim is judged on its blue channel, not luma
 dC, dF = 255 - C, 255 - Fin

@@ -1,21 +1,12 @@
-/** Portrait for the About section. Two separate photos, each shot against a
- *  backdrop matching its own theme's page background (see the .avatar-illus
- *  comment in globals.css for why that matters) — CSS cross-fades between
- *  them on theme toggle, so there's no client component or hydration risk
- *  here at all. */
+/** Portrait for the About section. One cutout on a transparent background
+ *  serves both themes — the page shows through, so there's nothing to swap
+ *  on toggle; only the rim light in globals.css (.avatar-illus) differs. */
 export default function Avatar() {
   return (
     <div className="avatar-photo">
       <img
-        className="avatar-illus avatar-illus-dark"
-        src="/avatar.png"
-        alt="Salil Chandwadkar"
-        width={1100}
-        height={1100}
-      />
-      <img
-        className="avatar-illus avatar-illus-light"
-        src="/avatar-light.webp"
+        className="avatar-illus"
+        src="/avatar.webp"
         alt="Salil Chandwadkar"
         width={1254}
         height={1254}

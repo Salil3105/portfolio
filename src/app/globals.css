@@ -55,8 +55,8 @@
 }
 
 /* ---- light theme ----
-   The About portrait has a separate light-theme render cut out to a
-   transparent background (see .avatar-illus below), and the hero's
+   The About portrait is one render cut out to a transparent background
+   (see .avatar-illus below), and the hero's
    illustration (HeroArt.tsx) is CSS-variable fills rather than a photo at
    all — so nothing here needs the dark "stage" workaround earlier versions
    of this theme relied on to hide a dark-only cutout's edges. */
@@ -370,10 +370,6 @@ p { margin: 0; }
 @media (prefers-reduced-motion: reduce) { .hero-art { animation: none; } }
 
 /* natural, frameless photo (no window/card) */
-/* the two portraits below are position:absolute (so they can cross-fade in
-   the same spot), which takes them out of flow — this used to get its
-   height for free from the one in-flow <img>, so now it's explicit, sized
-   to match what that img's own max-width/aspect-ratio used to produce */
 .avatar-photo {
   position: relative; display: grid; place-items: center; padding: 6px 0;
   width: 100%; max-width: 480px; aspect-ratio: 1 / 1; margin-inline: auto;
@@ -383,31 +379,26 @@ p { margin: 0; }
   background: radial-gradient(52% 48% at 50% 40%, rgba(124,92,255,.22), transparent 72%);
   filter: blur(26px); z-index: 0;
 }
-/* Two renders, swapped by theme, each cut out to a transparent background
-   so they sit straight on whatever the page is doing underneath (the aurora
-   tints the light page lavender, so "white" was never going to match):
-   avatar.png for dark, avatar-light.webp for light — the light one is a
-   separate white-backdrop photo, cut by scripts/cutout_light.py. Shipping
-   it uncut first showed up on a phone as a hard white rectangle: the mask
-   below only fades the corners, not the edges, since the dark render never
-   needed more. Both stack in the same box and cross-fade on toggle. */
+/* One render for both themes, cut out of its white studio backdrop by
+   scripts/cutout_light.py so it sits straight on whatever the page is doing
+   underneath (the aurora tints the light page lavender, so "white" was
+   never going to match). The cutout carries its own contact shadows, and
+   anything the crop cuts through is already faded; the mask just softens
+   the corners a touch more. */
 .avatar-illus {
-  position: absolute; inset: 0; margin: auto; z-index: 1;
+  position: relative; z-index: 1;
   width: 100%; max-width: 480px; height: auto; display: block;
-  object-fit: contain;
-  filter: drop-shadow(0 30px 55px rgba(0,0,0,.5));
   -webkit-mask-image: radial-gradient(86% 90% at 50% 44%, #000 72%, transparent 100%);
   mask-image: radial-gradient(86% 90% at 50% 44%, #000 72%, transparent 100%);
-  transition: opacity .25s ease;
+  /* dark page: the black hoodie and the code window are within a few
+     shades of the background, so a faint rim + violet glow keeps the
+     silhouette readable */
+  filter: drop-shadow(0 0 1px rgba(255,255,255,.22)) drop-shadow(0 0 18px rgba(124,92,255,.32));
+  transition: filter .25s ease;
 }
-.avatar-illus-light { opacity: 0; pointer-events: none; }
-:root[data-theme="light"] .avatar-illus-dark { opacity: 0; pointer-events: none; }
-:root[data-theme="light"] .avatar-illus-light { opacity: 1; pointer-events: auto; }
-/* no drop-shadow on the light render: the mask above clips to the image's
-   box, so the filter's blurred halo got sliced off flat at the bottom edge —
-   invisible as black-on-dark, but a visible straight line on a light page.
-   The cutout carries its own contact shadows under the laptop and phone. */
-.avatar-illus-light { filter: none; }
+/* light page: no halo — a glow reads as a smudge on white, and the mask
+   clips to the image's box, which would slice any halo off flat */
+:root[data-theme="light"] .avatar-illus { filter: none; }
 @media (prefers-reduced-motion: reduce) { .avatar-illus { transition: none; } }
 
 /* ---- 3D composition (CSS scene — fallback, contained, fast) ---- */

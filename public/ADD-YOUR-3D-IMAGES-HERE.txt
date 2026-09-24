@@ -6,19 +6,17 @@ The hero's workspace illustration is now a themed SVG component
 lets it render correctly in both light and dark mode. To change it, edit
 that file directly rather than swapping in a hero.png.
 
-The About section's portrait is two real photos, one per theme:
+The About section's portrait is one real photo used by both themes:
 
-  avatar.png         → dark theme (already cut out to transparent)
-  avatar-light.webp  → light theme
+  avatar.webp  → About section, light and dark
 
-For the light one, start from a render on a plain WHITE backdrop and cut
-it out with:
+Start from a render on a plain WHITE backdrop and cut it out with:
 
   python3 scripts/cutout_light.py <white-bg-render.png> out.png
 
 then convert to WebP (alpha is kept; ~6x smaller than the PNG) and save it
-as public/avatar-light.webp. The script's SEEDS list marks the white
+as public/avatar.webp. The script's SEEDS list marks the white
 objects that must stay (t-shirt, plant pot, notebook) — those boxes are in
 source-pixel coordinates for the current render, so update them if you
-swap in a different photo. Don't ship an uncut white-backdrop photo: the
-light page is tinted, so it shows up as a white rectangle.
+swap in a different photo. Don't ship an uncut white-backdrop photo: it shows up as a white
+rectangle on the dark page and on the (lavender-tinted) light one.
