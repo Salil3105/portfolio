@@ -4,7 +4,6 @@ import Link from "next/link";
 import { motion, useReducedMotion } from "framer-motion";
 import { profile, stats } from "@/lib/data";
 import { ArrowRight, Download, GithubIcon, LinkedinIcon, MailIcon } from "@/lib/icons";
-import Greeter from "@/components/Greeter";
 import HeroArt from "@/components/HeroArt";
 
 const container = {
@@ -42,8 +41,6 @@ export default function Hero() {
             <a href={profile.linkedin} target="_blank" rel="noopener noreferrer" aria-label="LinkedIn"><LinkedinIcon /></a>
             <a href={`mailto:${profile.email}`} aria-label="Email"><MailIcon /></a>
           </motion.div>
-
-          <Greeter />
 
           <motion.div className="stats" {...iv}>
             {stats.map((s) => (
