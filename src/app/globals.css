@@ -456,7 +456,17 @@ p { margin: 0; }
   padding: clamp(28px, 6vw, 48px) clamp(20px, 5vw, 40px);
   border-radius: var(--radius);
   background: #0b0b0f;
-  box-shadow: 0 30px 70px -34px rgba(20,20,30,.4), 0 1px 0 rgba(255,255,255,.04) inset;
+  /* the flat fill has to stay put (that's what fixed the grey banding above),
+     but a plain black rectangle read as a hole punched in the page — so the
+     softness moves to what surrounds it instead: a hairline purple ring for
+     definition, an accent-tinted glow standing in for what a gradient inside
+     the card used to do, and a deeper neutral shadow for actual lift. None
+     of this touches the flat fill itself. */
+  box-shadow:
+    0 1px 0 rgba(255,255,255,.05) inset,
+    0 0 0 1px rgba(124,92,255,.12),
+    0 30px 60px -26px rgba(124,92,255,.35),
+    0 50px 100px -42px rgba(20,20,30,.5);
 }
 
 /* ---- 3D composition (CSS scene — fallback, contained, fast) ---- */
@@ -476,9 +486,22 @@ p { margin: 0; }
    gradient there shows through as mismatched grey. Flat dark card instead,
    sized to the render with real padding rather than cropped to it. */
 :root[data-theme="light"] .composition {
+  /* the dark theme reserved this min-height so a shorter fallback scene
+     wouldn't cause layout shift, which cost nothing when the card had no
+     visible edge — now it does, and a landscape render inside a much taller
+     box left a wide band of empty solid black above and below it, which
+     read as a void more than a card. Sized to the render instead. */
+  min-height: 0;
   overflow: hidden; border-radius: var(--radius);
   background: #0b0b0f;
-  box-shadow: 0 30px 70px -34px rgba(20,20,30,.45), 0 1px 0 rgba(255,255,255,.04) inset;
+  /* box-shadow draws on the border edge, outside the content box, so
+     overflow:hidden (needed to keep the render's own edges clean) doesn't
+     clip it — same treatment as .avatar-photo above */
+  box-shadow:
+    0 1px 0 rgba(255,255,255,.05) inset,
+    0 0 0 1px rgba(124,92,255,.12),
+    0 30px 65px -26px rgba(124,92,255,.35),
+    0 55px 110px -42px rgba(20,20,30,.55);
 }
 @media (min-width: 961px) {
   :root[data-theme="light"] .hero-illus { width: 100%; max-width: 640px; }
