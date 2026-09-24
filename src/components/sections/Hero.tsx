@@ -5,6 +5,7 @@ import { motion, useReducedMotion } from "framer-motion";
 import { profile, stats } from "@/lib/data";
 import { ArrowRight, Download, GithubIcon, LinkedinIcon, MailIcon } from "@/lib/icons";
 import Greeter from "@/components/Greeter";
+import HeroArt from "@/components/HeroArt";
 
 const container = {
   hidden: {},
@@ -54,16 +55,9 @@ export default function Hero() {
           </motion.div>
         </motion.div>
 
-        {/* 3D workspace render (public/hero.png) */}
+        {/* workspace illustration — themed CSS vars, no light/dark stage needed */}
         <div className="composition" aria-hidden="true">
-          <img
-            className="hero-illus"
-            src="/hero.png"
-            alt=""
-            width={1400}
-            height={933}
-            fetchPriority="high"
-          />
+          <HeroArt />
         </div>
       </div>
     </section>

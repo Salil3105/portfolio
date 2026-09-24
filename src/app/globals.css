@@ -47,15 +47,15 @@
 }
 
 /* ---- light theme ----
-   The hero render, the about portrait and the greeter photo are pixel-level
-   cutouts whose edges were composited for a dark backdrop (the site's
-   long-running "grey halo" saga) — un-premultiplying against black bakes
-   light fringing into hair and fabric edges that only shows up on a light
-   page. Re-shooting them isn't on the table, so instead of shipping a
-   light theme that quietly looks broken around every photo, those three
-   visuals keep a dark "stage" behind them (see the .composition and
-   .avatar-photo overrides below) — everything else on the page goes fully
-   light. */
+   The about portrait and the greeter photo are pixel-level cutouts whose
+   edges were composited for a dark backdrop (the site's long-running "grey
+   halo" saga) — un-premultiplying against black bakes light fringing into
+   hair and fabric edges that only shows up on a light page. Re-shooting
+   them isn't on the table, so instead of shipping a light theme that
+   quietly looks broken around them, those two keep a dark stage behind them
+   (see .avatar-photo below) — everything else on the page, including the
+   hero's illustration (HeroArt.tsx — CSS-variable fills, not a raster cutout,
+   specifically so it never needed this workaround), goes fully light. */
 :root[data-theme="light"] {
   color-scheme: light;
   --bg:        #F7F7F8;
@@ -416,12 +416,16 @@ p { margin: 0; }
   .greeter-face, .greeter-wave, .greeter-dot { animation: none !important; }
 }
 
-/* ---- 3D illustration (drop public/hero.png to use it) ---- */
-/* backdrop is cut out in the file itself, so it composites cleanly over the
-   animated background (a blend mode can't reach it — `main` isolates it) */
-.hero-illus { position: relative; z-index: 1;
-  width: 100%; max-width: 620px; height: auto; margin-inline: auto; display: block; }
-@media (min-width: 961px) { .hero-illus { width: 118%; max-width: none; } }
+/* ---- hero illustration (HeroArt.tsx) ---- */
+/* every fill in it is a CSS variable, so — unlike the raster renders below —
+   it never needed a dark stage to read correctly in light mode */
+.hero-art { position: relative; z-index: 1;
+  width: 100%; max-width: 560px; height: auto; margin-inline: auto; display: block;
+  animation: heroFloat 7s ease-in-out infinite; }
+@media (min-width: 961px) { .hero-art { width: 92%; } }
+@keyframes heroFloat { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
+@media (prefers-reduced-motion: reduce) { .hero-art { animation: none; } }
+
 /* natural, frameless photo (no window/card) */
 .avatar-photo { position: relative; display: grid; place-items: center; padding: 6px 0; }
 .avatar-photo::before {
@@ -471,40 +475,13 @@ p { margin: 0; }
 
 /* ---- 3D composition (CSS scene — fallback, contained, fast) ---- */
 .composition { position: relative; min-height: clamp(400px, 44vw, 540px); display: grid; place-items: center; padding: 24px; overflow: visible; }
-/* soft ambient light behind the hero subject */
+/* soft ambient light behind the hero subject — HeroArt draws its own too
+   (a themed radial fill), so the two just layer; no light-theme override
+   needed here at all, unlike .avatar-photo below */
 .composition::before {
   content: ""; position: absolute; inset: 16% 14% 20%; z-index: 0; border-radius: 50%;
   background: radial-gradient(closest-side, rgba(124,92,255,.22), transparent 76%);
   filter: blur(40px);
-}
-/* same reasoning as .avatar-photo above, arrived at the same way — two
-   gradient attempts before this (a rounded box clipped too tight, then an
-   unclipped ellipse shaped for a portrait photo, wrong for this landscape
-   one) both still faded the tone *underneath* the render itself, and this
-   render's alpha turns out to be semi-transparent across most of the
-   laptop's lit edges and the code window, not just its silhouette — so any
-   gradient there shows through as mismatched grey. Flat dark card instead,
-   sized to the render with real padding rather than cropped to it. */
-:root[data-theme="light"] .composition {
-  /* the dark theme reserved this min-height so a shorter fallback scene
-     wouldn't cause layout shift, which cost nothing when the card had no
-     visible edge — now it does, and a landscape render inside a much taller
-     box left a wide band of empty solid black above and below it, which
-     read as a void more than a card. Sized to the render instead. */
-  min-height: 0;
-  overflow: hidden; border-radius: var(--radius);
-  background: #0b0b0f;
-  /* box-shadow draws on the border edge, outside the content box, so
-     overflow:hidden (needed to keep the render's own edges clean) doesn't
-     clip it — same treatment as .avatar-photo above */
-  box-shadow:
-    0 1px 0 rgba(255,255,255,.05) inset,
-    0 0 0 1px rgba(124,92,255,.12),
-    0 30px 65px -26px rgba(124,92,255,.35),
-    0 55px 110px -42px rgba(20,20,30,.55);
-}
-@media (min-width: 961px) {
-  :root[data-theme="light"] .hero-illus { width: 100%; max-width: 640px; }
 }
 @keyframes floaty { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-12px); } }
 @media (prefers-reduced-motion: reduce) { .code-window, .orb, .cube, .ring, .caret { animation: none !important; } }

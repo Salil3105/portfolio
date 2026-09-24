@@ -1,19 +1,23 @@
 3D ILLUSTRATIONS — how to make them appear
 ==========================================
 
-Drop two image files into THIS folder (public/) with these EXACT names:
+The hero's workspace illustration is now a themed SVG component
+(src/components/HeroArt.tsx) instead of a dropped-in image — that's what
+lets it render correctly in both light and dark mode. To change it, edit
+that file directly rather than swapping in a hero.png.
 
-  1. hero.png     → the MacBook + coffee mug 3D render (hero, right side)
-  2. avatar.png   → the 3D person / avatar (About section)
+The About section's portrait is still a real photo. Drop a file into THIS
+folder (public/) with this EXACT name:
 
-That's it. Refresh the page and they show automatically.
+  avatar.png   → the photo / avatar (About section)
 
 - PNG (transparent background looks best) or JPG — if JPG, rename the
-  file to hero.png / avatar.png anyway, OR change the src in the code:
-    Hero:   src/components/sections/Hero.tsx   -> "/hero.png"
-    Avatar: src/components/Avatar.tsx          -> "/avatar.png"
-- If a file is missing, the site falls back to the built-in CSS scene /
-  "SC" orb — nothing breaks.
-
-Tip: you already have both images (the ones pasted in chat). Just save
-them here as hero.png and avatar.png.
+  file to avatar.png anyway, OR change the src in the code:
+    Avatar: src/components/Avatar.tsx -> "/avatar.png"
+- If it's missing, the site falls back to the built-in CSS scene —
+  nothing breaks.
+- Whatever backdrop it's cut out against, it'll only look right in light
+  mode if that backdrop is flat and matches the tone used in
+  globals.css's `:root[data-theme="light"] .avatar-photo` (see the
+  comment there) — a gradient or a different flat color will show through
+  any semi-transparent edges as a mismatched band.
