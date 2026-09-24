@@ -1,6 +1,6 @@
 import Reveal from "@/components/Reveal";
 import { techStack } from "@/lib/data";
-import { techIcons } from "@/lib/icons";
+import { techIcons } from "@/lib/techIcons";
 
 export default function TechStack({ band = true }: { band?: boolean }) {
   return (
