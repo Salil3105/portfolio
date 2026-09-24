@@ -47,15 +47,11 @@
 }
 
 /* ---- light theme ----
-   The about portrait is a pixel-level cutout whose edges were composited
-   for a dark backdrop (the site's long-running "grey halo" saga) —
-   un-premultiplying against black bakes light fringing into hair and
-   fabric edges that only shows up on a light page. Re-shooting it isn't on
-   the table, so instead of shipping a light theme that quietly looks broken
-   around it, it keeps a dark stage behind it (see .avatar-photo below) —
-   everything else on the page, including the hero's illustration
-   (HeroArt.tsx — CSS-variable fills, not a raster cutout,
-   specifically so it never needed this workaround), goes fully light. */
+   Every raster photo on the page (see .avatar-photo below) is now shot
+   against a backdrop matching its own theme's page background, and the
+   hero's illustration (HeroArt.tsx) is CSS-variable fills rather than a
+   photo at all — so nothing here needs the dark "stage" workaround earlier
+   versions of this theme relied on to hide a dark-only cutout's edges. */
 :root[data-theme="light"] {
   color-scheme: light;
   --bg:        #F7F7F8;
@@ -341,57 +337,49 @@ p { margin: 0; }
 @media (prefers-reduced-motion: reduce) { .hero-art { animation: none; } }
 
 /* natural, frameless photo (no window/card) */
-.avatar-photo { position: relative; display: grid; place-items: center; padding: 6px 0; }
+/* the two portraits below are position:absolute (so they can cross-fade in
+   the same spot), which takes them out of flow — this used to get its
+   height for free from the one in-flow <img>, so now it's explicit, sized
+   to match what that img's own max-width/aspect-ratio used to produce */
+.avatar-photo {
+  position: relative; display: grid; place-items: center; padding: 6px 0;
+  width: 100%; max-width: 480px; aspect-ratio: 1 / 1; margin-inline: auto;
+}
 .avatar-photo::before {
   content: ""; position: absolute; inset: 8% 6% 14%;
   background: radial-gradient(52% 48% at 50% 40%, rgba(124,92,255,.22), transparent 72%);
   filter: blur(26px); z-index: 0;
 }
-/* transparent-background portrait; soft edge-fade dissolves the desk's
-   straight bottom/side edges into the page */
+/* Two renders, swapped by theme, each cut against a backdrop matching its
+   own page — avatar.png for dark (matches --bg exactly), avatar-light.png
+   for light (a separate photo shot on white, not a recolor of the same
+   file). Both stack in the same box and cross-fade on toggle; whichever one
+   the current theme doesn't want just sits at opacity 0. This replaces the
+   flat dark "stage" card this section used to need in light mode — sampling
+   avatar.png's alpha channel back then showed semi-transparent coverage
+   across most of the jacket and hair, which only reads correctly over a
+   flat, *matching* color, and a light photo made from the same dark-cut
+   file couldn't provide that. A real light-background photo doesn't have
+   that problem, so light mode gets to be frameless too, same as dark. */
 .avatar-illus {
-  position: relative; z-index: 1; width: 100%; max-width: 480px; height: auto; display: block;
-  margin-inline: auto; object-fit: contain;
+  position: absolute; inset: 0; margin: auto; z-index: 1;
+  width: 100%; max-width: 480px; height: auto; display: block;
+  object-fit: contain;
   filter: drop-shadow(0 30px 55px rgba(0,0,0,.5));
   -webkit-mask-image: radial-gradient(86% 90% at 50% 44%, #000 72%, transparent 100%);
   mask-image: radial-gradient(86% 90% at 50% 44%, #000 72%, transparent 100%);
+  transition: opacity .25s ease;
 }
-/* light theme: this cutout's edges only disappear against a dark backdrop
-   (see the DESIGN TOKENS note above) — but a soft gradient pool behind it
-   (two earlier attempts here) turned out to be the wrong shape of fix. This
-   render's "edges" aren't a thin rim: sampling the alpha channel showed
-   large semi-transparent areas across the hair, beard and most of the
-   jacket (highlights and rim-light were baked in as partial coverage, not
-   full opacity). Every one of those pixels is only the right color once
-   what's behind it is flat and matches the tone this was cut against — a
-   gradient that keeps changing underneath reveals itself as a grey band
-   right across the shoulder. So this is flat, not a fade: a plain dark
-   card, sized with real padding so it isn't cropped to the photo's own
-   edges (that's what read as "boxed" before — the box was invisible
-   against a matching dark page; here the shape shows, so it gets breathing
-   room and soft corners instead of pretending it isn't there). */
-:root[data-theme="light"] .avatar-photo {
-  padding: clamp(28px, 6vw, 48px) clamp(20px, 5vw, 40px);
-  border-radius: var(--radius);
-  background: #0b0b0f;
-  /* the flat fill has to stay put (that's what fixed the grey banding above),
-     but a plain black rectangle read as a hole punched in the page — so the
-     softness moves to what surrounds it instead: a hairline purple ring for
-     definition, an accent-tinted glow standing in for what a gradient inside
-     the card used to do, and a deeper neutral shadow for actual lift. None
-     of this touches the flat fill itself. */
-  box-shadow:
-    0 1px 0 rgba(255,255,255,.05) inset,
-    0 0 0 1px rgba(124,92,255,.12),
-    0 30px 60px -26px rgba(124,92,255,.35),
-    0 50px 100px -42px rgba(20,20,30,.5);
-}
+.avatar-illus-light { opacity: 0; pointer-events: none; }
+:root[data-theme="light"] .avatar-illus-dark { opacity: 0; pointer-events: none; }
+:root[data-theme="light"] .avatar-illus-light { opacity: 1; pointer-events: auto; }
+@media (prefers-reduced-motion: reduce) { .avatar-illus { transition: none; } }
 
 /* ---- 3D composition (CSS scene — fallback, contained, fast) ---- */
 .composition { position: relative; min-height: clamp(400px, 44vw, 540px); display: grid; place-items: center; padding: 24px; overflow: visible; }
 /* soft ambient light behind the hero subject — HeroArt draws its own too
    (a themed radial fill), so the two just layer; no light-theme override
-   needed here at all, unlike .avatar-photo below */
+   needed here */
 .composition::before {
   content: ""; position: absolute; inset: 16% 14% 20%; z-index: 0; border-radius: 50%;
   background: radial-gradient(closest-side, rgba(124,92,255,.22), transparent 76%);
