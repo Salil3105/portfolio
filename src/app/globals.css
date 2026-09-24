@@ -1,15 +1,18 @@
 @import "tailwindcss";
 
 /* ============================================================
-   DESIGN TOKENS — committed dark identity
+   DESIGN TOKENS — dark is the site's native identity; light is a
+   first-class second skin, not an afterthought (toggle in the nav,
+   defaults to the OS preference, remembers your choice).
    ============================================================ */
 :root {
+  color-scheme: dark;
   --bg:        #09090B;
+  --bg-rgb:    9,9,11;
   --bg-2:      #0C0C0F;
   --surface:   #111113;
   --card:      rgba(255,255,255,.024);
   --card-2:    rgba(255,255,255,.04);
-  --glass:     rgba(20,20,24,.55);
   --line:      rgba(255,255,255,.08);
   --line-2:    rgba(255,255,255,.14);
   --text:      #FAFAFA;
@@ -18,6 +21,15 @@
   --accent:    #7C5CFF;
   --accent-2:  #6EA8FE;
   --accent-weak: rgba(124,92,255,.14);
+
+  /* ambient backdrop — needs its own tokens because the grid/lane lines and
+     node markers are drawn with a fixed white or dark tint that only reads
+     correctly against a dark page */
+  --grid-line:   rgba(255,255,255,.030);
+  --stream-line: rgba(255,255,255,.055);
+  --node-line:   rgba(255,255,255,.22);
+  --ok:  #6ee7a8;
+  --err: #ff8b8b;
 
   --sans: var(--font-geist-sans), "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;
   --mono: var(--font-geist-mono), "SFMono-Regular", ui-monospace, "JetBrains Mono", monospace;
@@ -32,6 +44,43 @@
 
   --shadow-soft: 0 1px 0 rgba(255,255,255,.04) inset, 0 24px 60px -30px rgba(0,0,0,.9);
   --shadow-lift: 0 1px 0 rgba(255,255,255,.06) inset, 0 40px 90px -40px rgba(0,0,0,.95);
+}
+
+/* ---- light theme ----
+   The hero render, the about portrait and the greeter photo are pixel-level
+   cutouts whose edges were composited for a dark backdrop (the site's
+   long-running "grey halo" saga) — un-premultiplying against black bakes
+   light fringing into hair and fabric edges that only shows up on a light
+   page. Re-shooting them isn't on the table, so instead of shipping a
+   light theme that quietly looks broken around every photo, those three
+   visuals keep a dark "stage" behind them (see the .composition and
+   .avatar-photo overrides below) — everything else on the page goes fully
+   light. */
+:root[data-theme="light"] {
+  color-scheme: light;
+  --bg:        #F7F7F8;
+  --bg-rgb:    247,247,248;
+  --bg-2:      #EFEFF1;
+  --surface:   #FFFFFF;
+  --card:      rgba(9,9,11,.035);
+  --card-2:    rgba(9,9,11,.055);
+  --line:      rgba(9,9,11,.10);
+  --line-2:    rgba(9,9,11,.18);
+  --text:      #101012;
+  --muted:     #52525B;
+  --muted-2:   #6B6B76;
+  --accent:    #7C5CFF;
+  --accent-2:  #4C7FEA;
+  --accent-weak: rgba(124,92,255,.12);
+
+  --grid-line:   rgba(9,9,11,.05);
+  --stream-line: rgba(9,9,11,.07);
+  --node-line:   rgba(9,9,11,.22);
+  --ok:  #17914f;
+  --err: #d6314a;
+
+  --shadow-soft: 0 1px 0 rgba(255,255,255,.7) inset, 0 20px 45px -28px rgba(20,20,30,.16);
+  --shadow-lift: 0 1px 0 rgba(255,255,255,.8) inset, 0 30px 65px -30px rgba(20,20,30,.20);
 }
 
 * { box-sizing: border-box; }
@@ -58,8 +107,8 @@ body > header, body > main, body > footer { position: relative; z-index: 1; }
 .bd-grid {
   position: absolute; inset: -2px;
   background-image:
-    linear-gradient(rgba(255,255,255,.030) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(255,255,255,.030) 1px, transparent 1px);
+    linear-gradient(var(--grid-line) 1px, transparent 1px),
+    linear-gradient(90deg, var(--grid-line) 1px, transparent 1px);
   background-size: 64px 64px;
   -webkit-mask-image: radial-gradient(130% 85% at 50% 0%, #000 18%, transparent 72%);
   mask-image: radial-gradient(130% 85% at 50% 0%, #000 18%, transparent 72%);
@@ -99,11 +148,11 @@ body > header, body > main, body > footer { position: relative; z-index: 1; }
 .bd-lane {
   position: absolute; left: 0; right: 0; height: 1px;
   background: linear-gradient(90deg,
-    transparent, rgba(255,255,255,.055) 14%, rgba(255,255,255,.055) 86%, transparent);
+    transparent, var(--stream-line) 14%, var(--stream-line) 86%, transparent);
 }
 .bd-node {
   position: absolute; top: 50%; width: 5px; height: 5px; margin: -2.5px 0 0 -2.5px;
-  border: 1px solid rgba(255,255,255,.22); background: rgba(9,9,11,.9);
+  border: 1px solid var(--node-line); background: var(--bg);
   transform: rotate(45deg);
 }
 .bd-evt {
@@ -135,7 +184,7 @@ body > header, body > main, body > footer { position: relative; z-index: 1; }
   .bd-aurora { animation: none !important; }
   .bd-evt { animation: none !important; opacity: .55; }
 }
-::selection { background: var(--accent-weak); color: #fff; }
+::selection { background: var(--accent-weak); color: var(--text); }
 a { color: inherit; text-decoration: none; }
 img { max-width: 100%; display: block; }
 :focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; border-radius: 6px; }
@@ -157,10 +206,10 @@ p { margin: 0; }
 .nav {
   position: sticky; top: 0; z-index: 60;
   backdrop-filter: saturate(160%) blur(18px); -webkit-backdrop-filter: saturate(160%) blur(18px);
-  background: linear-gradient(180deg, rgba(9,9,11,.82), rgba(9,9,11,.42));
+  background: linear-gradient(180deg, rgba(var(--bg-rgb),.82), rgba(var(--bg-rgb),.42));
   border-bottom: 1px solid transparent; transition: border-color .35s ease, background .35s ease;
 }
-.nav.scrolled { border-bottom-color: var(--line); background: rgba(9,9,11,.72); }
+.nav.scrolled { border-bottom-color: var(--line); background: rgba(var(--bg-rgb),.72); }
 .nav-inner { display: flex; align-items: center; justify-content: space-between; height: 68px; }
 /* ---- logo ---- */
 /* the anchor stretches to the header's full height so the whole corner is
@@ -214,6 +263,29 @@ p { margin: 0; }
 .nav-links a.active::after { display: none; }
 .nav-cta { display: flex; align-items: center; gap: 10px; }
 
+/* ---- theme toggle ----
+   Both icons are always in the DOM; which one shows is decided here, by the
+   [data-theme] attribute the inline script (layout.tsx) sets before paint —
+   not in React state. See ThemeToggle.tsx for why that split matters. */
+.theme-toggle {
+  position: relative;
+  width: 40px; height: 40px; display: inline-flex; align-items: center; justify-content: center;
+  border: 1px solid var(--line); background: var(--card); border-radius: 10px; color: var(--muted);
+  cursor: pointer; transition: color .2s ease, border-color .2s ease, background .2s ease, transform .18s ease;
+}
+.theme-toggle:hover { color: var(--text); border-color: var(--line-2); background: var(--card-2); transform: translateY(-2px); }
+.tt-icon {
+  position: absolute; inset: 0; margin: auto; width: 18px; height: 18px;
+  transition: opacity .25s ease, transform .35s cubic-bezier(.2,.7,.2,1);
+}
+.tt-sun { opacity: 1; transform: rotate(0deg) scale(1); }
+.tt-moon { opacity: 0; transform: rotate(90deg) scale(.5); }
+:root[data-theme="light"] .tt-sun { opacity: 0; transform: rotate(-90deg) scale(.5); }
+:root[data-theme="light"] .tt-moon { opacity: 1; transform: rotate(0deg) scale(1); }
+@media (prefers-reduced-motion: reduce) {
+  .theme-toggle, .tt-icon { transition: none; }
+}
+
 /* mobile menu */
 .menu-btn { display: none; width: 44px; height: 44px; border: 1px solid var(--line); background: var(--card); border-radius: 12px; color: var(--text); align-items: center; justify-content: center; cursor: pointer; }
 .mobile-menu { display: none; }
@@ -226,10 +298,18 @@ p { margin: 0; }
   cursor: pointer; transition: transform .18s ease, box-shadow .25s ease, background .2s ease, border-color .2s ease; white-space: nowrap;
 }
 .btn svg { width: 16px; height: 16px; }
-.btn:hover { transform: translateY(-2px); border-color: var(--line-2); background: rgba(255,255,255,.06); }
+.btn:hover { transform: translateY(-2px); border-color: var(--line-2); background: var(--card-2); }
+/* .ghost before .primary: the mobile menu applies both together
+   ("btn ghost primary" on the active link) meaning to show as filled, so
+   .primary's background must win the cascade over .ghost's — same
+   specificity, so source order decides. This used to be the other way
+   round, and it was invisible in the dark theme (transparent-over-dark
+   read the same as the intended dark-ish idle state), but a transparent
+   background over the light theme's page turned "Home" into white text
+   on a near-white pill. */
+.btn.ghost { background: transparent; }
 .btn.primary { background: linear-gradient(180deg, #8b6dff, var(--accent)); border-color: transparent; color: #fff; box-shadow: 0 10px 30px -10px rgba(124,92,255,.6), 0 1px 0 rgba(255,255,255,.25) inset; }
 .btn.primary:hover { box-shadow: 0 16px 40px -12px rgba(124,92,255,.8), 0 1px 0 rgba(255,255,255,.3) inset; }
-.btn.ghost { background: transparent; }
 .btn.sm { --bh: 40px; font-size: 14px; padding: 0 14px; }
 
 /* ============================================================ HERO */
@@ -238,7 +318,7 @@ p { margin: 0; }
 .hero { padding-top: clamp(48px, 8vw, 88px); padding-bottom: clamp(56px, 9vw, 104px); }
 .hero-grid { display: grid; grid-template-columns: 1.05fr .95fr; gap: clamp(32px, 5vw, 72px); align-items: center; }
 .hero h1 { font-size: clamp(44px, 7.2vw, 84px); line-height: .98; letter-spacing: -.035em; font-weight: 600; margin-top: var(--s3); }
-.hero h1 .grad { background: linear-gradient(115deg, #fff 10%, var(--accent) 55%, var(--accent-2) 100%); -webkit-background-clip: text; background-clip: text; color: transparent; }
+.hero h1 .grad { background: linear-gradient(115deg, var(--text) 10%, var(--accent) 55%, var(--accent-2) 100%); -webkit-background-clip: text; background-clip: text; color: transparent; }
 .hero .lead { margin-top: var(--s3); }
 .hero-cta { display: flex; flex-wrap: wrap; gap: 12px; margin-top: var(--s4); }
 .socials { display: flex; gap: 10px; margin-top: var(--s4); }
@@ -267,16 +347,28 @@ p { margin: 0; }
   .hero-grid { position: relative; }
   .greeter { position: absolute; left: 53%; bottom: 4px; margin-top: 0; z-index: 3; }
 }
+/* on desktop this sits over the hero's dark stage; on mobile/tablet it sits
+   right on the page background, which is light in light theme. The old glass
+   tint (rgba(20,20,24,.55)) over a light page read as a medium GREY chip,
+   not a dark one — and the --text/--muted colors it used to inherit are dark
+   in light theme, so "Hi, I'm Salil" measured under WCAG AA contrast
+   (4.44:1, needs 4.5) and the line under it failed outright (1.81:1). Same
+   fix as the
+   avatar/greeter-face photo: this card is always dark, on purpose, so every
+   color in it is fixed rather than themed. */
 .greeter-card {
   display: inline-flex; align-items: center; gap: 14px;
   padding: 10px 20px 10px 10px; border-radius: 999px;
-  border: 1px solid var(--line); background: var(--glass);
+  border: 1px solid rgba(255,255,255,.14); background: rgba(15,15,19,.92);
   -webkit-backdrop-filter: blur(14px) saturate(140%);
   backdrop-filter: blur(14px) saturate(140%);
-  box-shadow: var(--shadow-soft);
+  box-shadow: 0 1px 0 rgba(255,255,255,.05) inset, 0 24px 50px -26px rgba(0,0,0,.6);
   transition: transform .25s cubic-bezier(.2,.7,.2,1), border-color .25s ease, box-shadow .25s ease;
 }
-.greeter-card:hover { transform: translateY(-3px); border-color: var(--line-2); box-shadow: var(--shadow-lift); }
+.greeter-card:hover {
+  transform: translateY(-3px); border-color: rgba(255,255,255,.24);
+  box-shadow: 0 1px 0 rgba(255,255,255,.06) inset, 0 32px 64px -28px rgba(0,0,0,.7);
+}
 .greeter-face {
   position: relative; flex: none; width: 52px; height: 52px;
   animation: greetBob 3.6s ease-in-out infinite;
@@ -286,23 +378,23 @@ p { margin: 0; }
 .greeter-face img {
   width: 100%; height: 100%; display: block; border-radius: 50%; object-fit: cover;
   background: radial-gradient(72% 72% at 50% 26%, rgba(124,92,255,.38), rgba(17,17,19,.95));
-  box-shadow: 0 0 0 1px var(--line-2);
+  box-shadow: 0 0 0 1px rgba(255,255,255,.14);
 }
 .greeter-dot {
   position: absolute; right: 0; bottom: 2px; width: 11px; height: 11px; border-radius: 50%;
-  background: #34D399; border: 2px solid var(--bg);
+  background: #34D399; border: 2px solid #0f0f13;
   animation: greetPulse 2.6s ease-out infinite;
 }
 .greeter-copy { display: grid; gap: 3px; }
-.greeter-hi { font-size: 15px; font-weight: 600; color: var(--text); letter-spacing: -.01em; }
+.greeter-hi { font-size: 15px; font-weight: 600; color: #F5F5F7; letter-spacing: -.01em; }
 .greeter-wave { display: inline-block; transform-origin: 72% 78%; animation: greetWave 3.4s ease-in-out infinite; }
 .greeter-sub {
-  font-size: 13.5px; color: var(--muted);
+  font-size: 13.5px; color: #B7B7C0;
   display: inline-flex; align-items: center; gap: 6px;
   transition: color .2s ease, gap .2s ease;
 }
 .greeter-sub svg { width: 13px; height: 13px; }
-.greeter-card:hover .greeter-sub { color: var(--text); gap: 10px; }
+.greeter-card:hover .greeter-sub { color: #F5F5F7; gap: 10px; }
 
 @keyframes greetBob { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-3px); } }
 /* waves in bursts, then rests — a nonstop wave reads as a loading spinner */
@@ -346,6 +438,18 @@ p { margin: 0; }
   -webkit-mask-image: radial-gradient(86% 90% at 50% 44%, #000 72%, transparent 100%);
   mask-image: radial-gradient(86% 90% at 50% 44%, #000 72%, transparent 100%);
 }
+/* light theme: this cutout's edges only disappear against a dark backdrop
+   (see the DESIGN TOKENS note above), so give it one back — a soft dark
+   pool behind the subject, fading out before it reaches a hard edge, never
+   a bordered card. Sized to roughly hug the mask above so the two fades
+   line up instead of the panel showing through past the photo. */
+:root[data-theme="light"] .avatar-photo {
+  padding-block: clamp(20px, 5vw, 44px);
+  /* an element's own background always paints behind its ::before/::after
+     and children, so this sits under the existing glow and the photo
+     without fighting either one for stacking order */
+  background: radial-gradient(62% 60% at 50% 40%, #121218 0%, #121218 58%, rgba(18,18,24,.75) 72%, rgba(18,18,24,0) 100%);
+}
 
 /* ---- 3D composition (CSS scene — fallback, contained, fast) ---- */
 .composition { position: relative; min-height: clamp(400px, 44vw, 540px); display: grid; place-items: center; padding: 24px; overflow: visible; }
@@ -354,6 +458,15 @@ p { margin: 0; }
   content: ""; position: absolute; inset: 16% 14% 20%; z-index: 0; border-radius: 50%;
   background: radial-gradient(closest-side, rgba(124,92,255,.22), transparent 76%);
   filter: blur(40px);
+}
+/* same reasoning as .avatar-photo above — the render needs its dark stage
+   back, so it's contained instead of bleeding past a now-visible edge */
+:root[data-theme="light"] .composition {
+  overflow: hidden; border-radius: var(--radius);
+  background: radial-gradient(68% 74% at 50% 46%, #121218 0%, #121218 56%, rgba(18,18,24,.8) 70%, rgba(18,18,24,0) 100%);
+}
+@media (min-width: 961px) {
+  :root[data-theme="light"] .hero-illus { width: 100%; max-width: 640px; }
 }
 @keyframes floaty { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-12px); } }
 @media (prefers-reduced-motion: reduce) { .code-window, .orb, .cube, .ring, .caret { animation: none !important; } }
@@ -482,8 +595,8 @@ p { margin: 0; }
 @media (prefers-reduced-motion: reduce) { .plane { display: none; } }
 
 .form-note { font-size: 13px; color: var(--muted-2); text-align: center; min-height: 18px; transition: color .3s ease; }
-.form-note.ok { color: #6ee7a8; }
-.form-note.err { color: #ff8b8b; }
+.form-note.ok { color: var(--ok); }
+.form-note.err { color: var(--err); }
 .btn:disabled { opacity: .6; cursor: not-allowed; transform: none; }
 
 /* ---- page header (inner routes) ----

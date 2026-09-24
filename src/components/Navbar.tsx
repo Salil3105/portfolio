@@ -7,6 +7,7 @@ import { motion, useReducedMotion } from "framer-motion";
 import { navLinks, profile } from "@/lib/data";
 import { ArrowRight, MenuIcon, CloseIcon } from "@/lib/icons";
 import LogoLink from "@/components/LogoLink";
+import ThemeToggle from "@/components/ThemeToggle";
 
 export default function Navbar() {
   const pathname = usePathname();
@@ -45,6 +46,7 @@ export default function Navbar() {
         </nav>
 
         <div className="nav-cta">
+          <ThemeToggle />
           <Link href="/contact" className="btn sm ghost">Let&apos;s talk</Link>
           <a href={profile.resumeUrl} className="btn sm primary" download>
             Résumé <ArrowRight />

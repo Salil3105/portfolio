@@ -23,16 +23,44 @@ export const metadata: Metadata = {
 };
 
 export const viewport: Viewport = {
-  themeColor: "#09090B",
+  themeColor: [
+    { media: "(prefers-color-scheme: light)", color: "#F7F7F8" },
+    { media: "(prefers-color-scheme: dark)", color: "#09090B" },
+  ],
   width: "device-width",
   initialScale: 1,
 };
 
+/** Runs before hydration so the page never flashes the wrong theme, and
+ *  before paint so there's no light-to-dark pop either. Kept tiny and
+ *  inlined — it can't wait on a script fetch. */
+const THEME_INIT = `
+(function () {
+  try {
+    var t = localStorage.getItem("theme");
+    if (t !== "light" && t !== "dark") {
+      t = matchMedia("(prefers-color-scheme: light)").matches ? "light" : "dark";
+    }
+    document.documentElement.setAttribute("data-theme", t);
+  } catch (e) {}
+})();
+`;
+
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    // suppressHydrationWarning: browser extensions inject attributes on <html>
-    // before React hydrates, which would otherwise log a mismatch.
-    <html lang="en" className={`${GeistSans.variable} ${GeistMono.variable}`} suppressHydrationWarning>
+    // data-theme="dark": the site's default identity, and what a no-JS
+    // visitor gets. suppressHydrationWarning covers two things that change
+    // <html> before React hydrates — browser extensions injecting their own
+    // attributes, and THEME_INIT below overwriting data-theme itself.
+    <html
+      lang="en"
+      data-theme="dark"
+      className={`${GeistSans.variable} ${GeistMono.variable}`}
+      suppressHydrationWarning
+    >
+      <head>
+        <script dangerouslySetInnerHTML={{ __html: THEME_INIT }} />
+      </head>
       <body>
         <Backdrop />
         <Navbar />
