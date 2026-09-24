@@ -6,18 +6,19 @@ The hero's workspace illustration is now a themed SVG component
 lets it render correctly in both light and dark mode. To change it, edit
 that file directly rather than swapping in a hero.png.
 
-The About section's portrait is still a real photo. Drop a file into THIS
-folder (public/) with this EXACT name:
+The About section's portrait is two real photos, one per theme:
 
-  avatar.png   → the photo / avatar (About section)
+  avatar.png         → dark theme (already cut out to transparent)
+  avatar-light.webp  → light theme
 
-- PNG (transparent background looks best) or JPG — if JPG, rename the
-  file to avatar.png anyway, OR change the src in the code:
-    Avatar: src/components/Avatar.tsx -> "/avatar.png"
-- If it's missing, the site falls back to the built-in CSS scene —
-  nothing breaks.
-- Whatever backdrop it's cut out against, it'll only look right in light
-  mode if that backdrop is flat and matches the tone used in
-  globals.css's `:root[data-theme="light"] .avatar-photo` (see the
-  comment there) — a gradient or a different flat color will show through
-  any semi-transparent edges as a mismatched band.
+For the light one, start from a render on a plain WHITE backdrop and cut
+it out with:
+
+  python3 scripts/cutout_light.py <white-bg-render.png> out.png
+
+then convert to WebP (alpha is kept; ~6x smaller than the PNG) and save it
+as public/avatar-light.webp. The script's SEEDS list marks the white
+objects that must stay (t-shirt, plant pot, notebook) — those boxes are in
+source-pixel coordinates for the current render, so update them if you
+swap in a different photo. Don't ship an uncut white-backdrop photo: the
+light page is tinted, so it shows up as a white rectangle.

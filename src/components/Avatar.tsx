@@ -15,7 +15,7 @@ export default function Avatar() {
       />
       <img
         className="avatar-illus avatar-illus-light"
-        src="/avatar-light.png"
+        src="/avatar-light.webp"
         alt="Salil Chandwadkar"
         width={1254}
         height={1254}

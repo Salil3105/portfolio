@@ -386,7 +386,7 @@ p { margin: 0; }
 /* Two renders, swapped by theme, each cut out to a transparent background
    so they sit straight on whatever the page is doing underneath (the aurora
    tints the light page lavender, so "white" was never going to match):
-   avatar.png for dark, avatar-light.png for light — the light one is a
+   avatar.png for dark, avatar-light.webp for light — the light one is a
    separate white-backdrop photo, cut by scripts/cutout_light.py. Shipping
    it uncut first showed up on a phone as a hard white rectangle: the mask
    below only fades the corners, not the edges, since the dark render never
