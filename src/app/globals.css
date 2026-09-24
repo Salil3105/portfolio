@@ -439,16 +439,24 @@ p { margin: 0; }
   mask-image: radial-gradient(86% 90% at 50% 44%, #000 72%, transparent 100%);
 }
 /* light theme: this cutout's edges only disappear against a dark backdrop
-   (see the DESIGN TOKENS note above), so give it one back — a soft dark
-   pool behind the subject, fading out before it reaches a hard edge, never
-   a bordered card. Sized to roughly hug the mask above so the two fades
-   line up instead of the panel showing through past the photo. */
+   (see the DESIGN TOKENS note above) — but a soft gradient pool behind it
+   (two earlier attempts here) turned out to be the wrong shape of fix. This
+   render's "edges" aren't a thin rim: sampling the alpha channel showed
+   large semi-transparent areas across the hair, beard and most of the
+   jacket (highlights and rim-light were baked in as partial coverage, not
+   full opacity). Every one of those pixels is only the right color once
+   what's behind it is flat and matches the tone this was cut against — a
+   gradient that keeps changing underneath reveals itself as a grey band
+   right across the shoulder. So this is flat, not a fade: a plain dark
+   card, sized with real padding so it isn't cropped to the photo's own
+   edges (that's what read as "boxed" before — the box was invisible
+   against a matching dark page; here the shape shows, so it gets breathing
+   room and soft corners instead of pretending it isn't there). */
 :root[data-theme="light"] .avatar-photo {
-  padding-block: clamp(20px, 5vw, 44px);
-  /* an element's own background always paints behind its ::before/::after
-     and children, so this sits under the existing glow and the photo
-     without fighting either one for stacking order */
-  background: radial-gradient(62% 60% at 50% 40%, #121218 0%, #121218 58%, rgba(18,18,24,.75) 72%, rgba(18,18,24,0) 100%);
+  padding: clamp(28px, 6vw, 48px) clamp(20px, 5vw, 40px);
+  border-radius: var(--radius);
+  background: #0b0b0f;
+  box-shadow: 0 30px 70px -34px rgba(20,20,30,.4), 0 1px 0 rgba(255,255,255,.04) inset;
 }
 
 /* ---- 3D composition (CSS scene — fallback, contained, fast) ---- */
@@ -459,18 +467,18 @@ p { margin: 0; }
   background: radial-gradient(closest-side, rgba(124,92,255,.22), transparent 76%);
   filter: blur(40px);
 }
-/* same reasoning as .avatar-photo above — the render needs its dark stage
-   back. First pass clipped this to a rounded box (overflow:hidden +
-   border-radius), which just traded one hard edge for another: the ellipse
-   was sized so close to the box that its corners never reached transparent,
-   so the "stage" clipped into a visible dark rounded rectangle floating on
-   the page — exactly the boxed look this is meant to avoid. Second pass
-   dropped the clipping but kept a near-circular ellipse, which fit the
-   portrait avatar photo fine but was taller than this landscape laptop
-   render, so it read as a tall dark oval with empty padding above and
-   below it. Flattened to match the render's own wide, short proportions. */
+/* same reasoning as .avatar-photo above, arrived at the same way — two
+   gradient attempts before this (a rounded box clipped too tight, then an
+   unclipped ellipse shaped for a portrait photo, wrong for this landscape
+   one) both still faded the tone *underneath* the render itself, and this
+   render's alpha turns out to be semi-transparent across most of the
+   laptop's lit edges and the code window, not just its silhouette — so any
+   gradient there shows through as mismatched grey. Flat dark card instead,
+   sized to the render with real padding rather than cropped to it. */
 :root[data-theme="light"] .composition {
-  background: radial-gradient(50% 32% at 50% 50%, #121218 0%, #121218 44%, rgba(18,18,24,.55) 64%, rgba(18,18,24,0) 94%);
+  overflow: hidden; border-radius: var(--radius);
+  background: #0b0b0f;
+  box-shadow: 0 30px 70px -34px rgba(20,20,30,.45), 0 1px 0 rgba(255,255,255,.04) inset;
 }
 @media (min-width: 961px) {
   :root[data-theme="light"] .hero-illus { width: 100%; max-width: 640px; }
