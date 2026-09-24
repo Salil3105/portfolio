@@ -460,10 +460,17 @@ p { margin: 0; }
   filter: blur(40px);
 }
 /* same reasoning as .avatar-photo above — the render needs its dark stage
-   back, so it's contained instead of bleeding past a now-visible edge */
+   back. First pass clipped this to a rounded box (overflow:hidden +
+   border-radius), which just traded one hard edge for another: the ellipse
+   was sized so close to the box that its corners never reached transparent,
+   so the "stage" clipped into a visible dark rounded rectangle floating on
+   the page — exactly the boxed look this is meant to avoid. Second pass
+   dropped the clipping but kept a near-circular ellipse, which fit the
+   portrait avatar photo fine but was taller than this landscape laptop
+   render, so it read as a tall dark oval with empty padding above and
+   below it. Flattened to match the render's own wide, short proportions. */
 :root[data-theme="light"] .composition {
-  overflow: hidden; border-radius: var(--radius);
-  background: radial-gradient(68% 74% at 50% 46%, #121218 0%, #121218 56%, rgba(18,18,24,.8) 70%, rgba(18,18,24,0) 100%);
+  background: radial-gradient(50% 32% at 50% 50%, #121218 0%, #121218 44%, rgba(18,18,24,.55) 64%, rgba(18,18,24,0) 94%);
 }
 @media (min-width: 961px) {
   :root[data-theme="light"] .hero-illus { width: 100%; max-width: 640px; }
