@@ -6,7 +6,7 @@ import { useEffect, useState } from "react";
 import { motion, useReducedMotion } from "framer-motion";
 import { navLinks, profile } from "@/lib/data";
 import { ArrowRight, MenuIcon, CloseIcon } from "@/lib/icons";
-import Logo from "@/components/Logo";
+import LogoLink from "@/components/LogoLink";
 
 export default function Navbar() {
   const pathname = usePathname();
@@ -24,7 +24,7 @@ export default function Navbar() {
   return (
     <header className={`nav${scrolled ? " scrolled" : ""}`}>
       <div className="wrap nav-inner">
-        <Link href="/" aria-label="Home" className="logo-link"><Logo /></Link>
+        <LogoLink />
 
         <nav className="nav-links" aria-label="Primary">
           {navLinks.map((l) => {

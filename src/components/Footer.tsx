@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { navLinks, profile } from "@/lib/data";
 import { GithubIcon, LinkedinIcon, MailIcon, ArrowRight } from "@/lib/icons";
-import Logo from "@/components/Logo";
+import LogoLink from "@/components/LogoLink";
 
 export default function Footer() {
   return (
@@ -20,7 +20,7 @@ export default function Footer() {
 
         <div className="foot-cols">
           <div className="foot-brand">
-            <Link href="/" aria-label="Home" className="logo-link"><Logo /></Link>
+            <LogoLink />
             <p>
               Software engineer building event-driven microservices in Java and Spring Boot —
               currently at Dassault Systèmes, Pune.
